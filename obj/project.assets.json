@@ -4716,11 +4716,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\Versity_pro\\CarRentalManagementSystem\\CarRentalManagementSystem.csproj",
+      "projectUniqueName": "F:\\Versity_pro\\Car_Rental\\CarRentalManagementSystem.csproj",
       "projectName": "CarRentalManagementSystem",
-      "projectPath": "F:\\Versity_pro\\CarRentalManagementSystem\\CarRentalManagementSystem.csproj",
+      "projectPath": "F:\\Versity_pro\\Car_Rental\\CarRentalManagementSystem.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "F:\\Versity_pro\\CarRentalManagementSystem\\obj\\",
+      "outputPath": "F:\\Versity_pro\\Car_Rental\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

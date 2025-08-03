@@ -8,9 +8,9 @@ namespace CarRentalManagementSystem.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly ApplicationDbContext _context;
+    private readonly ApplicationDbContext? _context;
 
-    public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+    public HomeController(ILogger<HomeController> logger, ApplicationDbContext? context = null)
     {
         _logger = logger;
         _context = context;
@@ -32,6 +32,26 @@ public class HomeController : Controller
         var userName = HttpContext.Session.GetString("UserName");
         ViewBag.UserName = userName;
         
+        return View();
+    }
+
+    public IActionResult AvailableCars()
+    {
+        return View();
+    }
+
+    public IActionResult Services()
+    {
+        return View();
+    }
+
+    public IActionResult About()
+    {
+        return View();
+    }
+
+    public IActionResult Contact()
+    {
         return View();
     }
 

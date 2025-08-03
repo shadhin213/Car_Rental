@@ -1,0 +1,235 @@
+@{
+    ViewData["Title"] = "Available Cars";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-header bg-primary text-white p-4 rounded mb-4">
+                <h1 class="display-4">
+                    <i class="bi bi-car-front"></i> Available Cars
+                </h1>
+                <p class="lead">Browse our extensive collection of vehicles available for rent</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-funnel"></i> Filter Cars</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label for="vehicleType" class="form-label">Vehicle Type</label>
+                            <select class="form-select" id="vehicleType">
+                                <option value="">All Types</option>
+                                <option value="sedan">Sedan</option>
+                                <option value="suv">SUV</option>
+                                <option value="truck">Truck</option>
+                                <option value="van">Van</option>
+                                <option value="bus">Bus</option>
+                                <option value="motorcycle">Motorcycle</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="priceRange" class="form-label">Price Range</label>
+                            <select class="form-select" id="priceRange">
+                                <option value="">All Prices</option>
+                                <option value="0-50">$0 - $50/day</option>
+                                <option value="50-100">$50 - $100/day</option>
+                                <option value="100-200">$100 - $200/day</option>
+                                <option value="200+">$200+/day</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="transmission" class="form-label">Transmission</label>
+                            <select class="form-select" id="transmission">
+                                <option value="">All</option>
+                                <option value="automatic">Automatic</option>
+                                <option value="manual">Manual</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="fuelType" class="form-label">Fuel Type</label>
+                            <select class="form-select" id="fuelType">
+                                <option value="">All</option>
+                                <option value="petrol">Petrol</option>
+                                <option value="diesel">Diesel</option>
+                                <option value="electric">Electric</option>
+                                <option value="hybrid">Hybrid</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cars Grid -->
+    <div class="row" id="carsGrid">
+        <!-- Sample Car Cards -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-img-top bg-light text-center p-4">
+                    <i class="bi bi-car-front" style="font-size: 4rem; color: #007bff;"></i>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Toyota Camry</h5>
+                    <p class="card-text text-muted">Sedan • Automatic • Petrol</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-success">Available</span>
+                        <span class="text-primary fw-bold">$75/day</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button class="btn btn-primary w-100">
+                        <i class="bi bi-calendar-plus"></i> Rent Now
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-img-top bg-light text-center p-4">
+                    <i class="bi bi-suv" style="font-size: 4rem; color: #28a745;"></i>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Honda CR-V</h5>
+                    <p class="card-text text-muted">SUV • Automatic • Petrol</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-success">Available</span>
+                        <span class="text-primary fw-bold">$95/day</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button class="btn btn-primary w-100">
+                        <i class="bi bi-calendar-plus"></i> Rent Now
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-img-top bg-light text-center p-4">
+                    <i class="bi bi-truck" style="font-size: 4rem; color: #ffc107;"></i>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Ford F-150</h5>
+                    <p class="card-text text-muted">Truck • Automatic • Petrol</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-success">Available</span>
+                        <span class="text-primary fw-bold">$120/day</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button class="btn btn-primary w-100">
+                        <i class="bi bi-calendar-plus"></i> Rent Now
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-img-top bg-light text-center p-4">
+                    <i class="bi bi-van" style="font-size: 4rem; color: #dc3545;"></i>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Mercedes Sprinter</h5>
+                    <p class="card-text text-muted">Van • Automatic • Diesel</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-success">Available</span>
+                        <span class="text-primary fw-bold">$150/day</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button class="btn btn-primary w-100">
+                        <i class="bi bi-calendar-plus"></i> Rent Now
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-img-top bg-light text-center p-4">
+                    <i class="bi bi-bicycle" style="font-size: 4rem; color: #6f42c1;"></i>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Honda CBR600RR</h5>
+                    <p class="card-text text-muted">Motorcycle • Manual • Petrol</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-success">Available</span>
+                        <span class="text-primary fw-bold">$45/day</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button class="btn btn-primary w-100">
+                        <i class="bi bi-calendar-plus"></i> Rent Now
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-img-top bg-light text-center p-4">
+                    <i class="bi bi-bus" style="font-size: 4rem; color: #fd7e14;"></i>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Mercedes-Benz Bus</h5>
+                    <p class="card-text text-muted">Bus • Automatic • Diesel</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-success">Available</span>
+                        <span class="text-primary fw-bold">$200/day</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button class="btn btn-primary w-100">
+                        <i class="bi bi-calendar-plus"></i> Rent Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="Cars pagination">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Add filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterSelects = document.querySelectorAll('select');
+            filterSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    // Add filter logic here
+                    console.log('Filter changed:', this.id, this.value);
+                });
+            });
+        });
+    </script>
+} 
