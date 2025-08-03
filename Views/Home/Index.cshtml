@@ -1,0 +1,375 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!-- Hero Slider Section -->
+<div id="heroSlider" class="carousel slide mb-5" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+<div class="hero-slide" style="background-image: url('https://res.cloudinary.com/dfdzjbnye/image/upload/v1753870907/car-1281698_960_720_b9cbrz.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+                <div class="container">
+                    <div class="row align-items-center min-vh-75">
+                        <div class="col-lg-6 text-white">
+                            <h1 class="display-4 fw-bold mb-4 animate-slide-in">
+                                <i class="bi bi-car-front"></i> Premium Car Rental
+                            </h1>
+                            <p class="lead mb-4 animate-slide-in-delay">
+                                Experience luxury and comfort with our premium vehicle collection. 
+                                From sports cars to luxury sedans, we have it all.
+                            </p>
+                            <div class="animate-slide-in-delay-2">
+                                @if (Context.Session.GetString("UserId") != null)
+                                {
+                                    <a asp-controller="Home" asp-action="Dashboard" class="btn btn-light btn-lg me-3">
+                                        <i class="bi bi-speedometer2"></i> Go to Dashboard
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg me-3">
+                                        <i class="bi bi-person-plus"></i> Get Started
+                                    </a>
+                                }
+                                <a href="#vehicleTypes" class="btn btn-outline-light btn-lg">
+                                    <i class="bi bi-arrow-down"></i> Explore Vehicles
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 text-center">
+                            <div class="hero-image animate-float">
+                                <i class="bi bi-car-front-fill text-white" style="font-size: 15rem; opacity: 0.3;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="hero-slide" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="container">
+                    <div class="row align-items-center min-vh-75">
+                        <div class="col-lg-6 text-white">
+                            <h1 class="display-4 fw-bold mb-4 animate-slide-in">
+                                <i class="bi bi-truck"></i> Commercial Solutions
+                            </h1>
+                            <p class="lead mb-4 animate-slide-in-delay">
+                                Professional fleet management for businesses. 
+                                Trucks, vans, and commercial vehicles for all your business needs.
+                            </p>
+                            <div class="animate-slide-in-delay-2">
+                                <a href="#vehicleTypes" class="btn btn-light btn-lg me-3">
+                                    <i class="bi bi-building"></i> Business Solutions
+                                </a>
+                                <a href="#features" class="btn btn-outline-light btn-lg">
+                                    <i class="bi bi-info-circle"></i> Learn More
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 text-center">
+                            <div class="hero-image animate-float">
+                                <i class="bi bi-truck text-white" style="font-size: 15rem; opacity: 0.3;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="hero-slide" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="container">
+                    <div class="row align-items-center min-vh-75">
+                        <div class="col-lg-6 text-white">
+                            <h1 class="display-4 fw-bold mb-4 animate-slide-in">
+                                <i class="bi bi-shield-check"></i> Safe & Reliable
+                            </h1>
+                            <p class="lead mb-4 animate-slide-in-delay">
+                                Your safety is our priority. All vehicles are regularly maintained 
+                                and inspected for your peace of mind.
+                            </p>
+                            <div class="animate-slide-in-delay-2">
+                                <a href="#features" class="btn btn-light btn-lg me-3">
+                                    <i class="bi bi-shield-check"></i> Safety Features
+                                </a>
+                                <a href="#contact" class="btn btn-outline-light btn-lg">
+                                    <i class="bi bi-telephone"></i> Contact Us
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 text-center">
+                            <div class="hero-image animate-float">
+                                <i class="bi bi-shield-check text-white" style="font-size: 15rem; opacity: 0.3;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroSlider" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroSlider" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<!-- Vehicle Types Section -->
+<div id="vehicleTypes" class="container mb-5">
+    <h2 class="text-center mb-5">
+        <i class="bi bi-truck text-primary"></i> Our Vehicle Types
+    </h2>
+    <div class="row g-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="motor-bike">
+                <div class="card-body">
+                    <i class="bi bi-bicycle fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Motor Bike</h5>
+                    <p class="card-text">Perfect for quick city rides and solo travel</p>
+                    <div class="vehicle-details mt-3" style="display: none;">
+                        <small class="text-muted">Starting from $15/day</small>
+                        <br>
+                        <button class="btn btn-sm btn-outline-primary mt-2">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="cng">
+                <div class="card-body">
+                    <i class="bi bi-fuel-pump fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">CNG</h5>
+                    <p class="card-text">Eco-friendly vehicles for environmentally conscious travel</p>
+                    <div class="vehicle-details mt-3" style="display: none;">
+                        <small class="text-muted">Starting from $25/day</small>
+                        <br>
+                        <button class="btn btn-sm btn-outline-success mt-2">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="microbus">
+                <div class="card-body">
+                    <i class="bi bi-bus-front fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">Microbus</h5>
+                    <p class="card-text">Ideal for group travel and family outings</p>
+                    <div class="vehicle-details mt-3" style="display: none;">
+                        <small class="text-muted">Starting from $45/day</small>
+                        <br>
+                        <button class="btn btn-sm btn-outline-info mt-2">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="truck">
+                <div class="card-body">
+                    <i class="bi bi-truck fa-3x text-warning mb-3"></i>
+                    <h5 class="card-title">Truck</h5>
+                    <p class="card-text">Heavy-duty vehicles for commercial and industrial use</p>
+                    <div class="vehicle-details mt-3" style="display: none;">
+                        <small class="text-muted">Starting from $80/day</small>
+                        <br>
+                        <button class="btn btn-sm btn-outline-warning mt-2">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="sedan">
+                <div class="card-body">
+                    <i class="bi bi-car-front fa-3x text-danger mb-3"></i>
+                    <h5 class="card-title">Sedan</h5>
+                    <p class="card-text">Comfortable and stylish cars for business and leisure</p>
+                    <div class="vehicle-details mt-3" style="display: none;">
+                        <small class="text-muted">Starting from $35/day</small>
+                        <br>
+                        <button class="btn btn-sm btn-outline-danger mt-2">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="suv">
+                <div class="card-body">
+                    <i class="bi bi-suv fa-3x text-secondary mb-3"></i>
+                    <h5 class="card-title">SUV</h5>
+                    <p class="card-text">Spacious vehicles perfect for adventure and family trips</p>
+                    <div class="vehicle-details mt-3" style="display: none;">
+                        <small class="text-muted">Starting from $55/day</small>
+                        <br>
+                        <button class="btn btn-sm btn-outline-secondary mt-2">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="van">
+                <div class="card-body">
+                    <i class="bi bi-van fa-3x text-dark mb-3"></i>
+                    <h5 class="card-title">Van</h5>
+                    <p class="card-text">Versatile vehicles for cargo and passenger transport</p>
+                    <div class="vehicle-details mt-3" style="display: none;">
+                        <small class="text-muted">Starting from $40/day</small>
+                        <br>
+                        <button class="btn btn-sm btn-outline-dark mt-2">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="bus">
+                <div class="card-body">
+                    <i class="bi bi-bus fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Bus</h5>
+                    <p class="card-text">Large capacity vehicles for group transportation</p>
+                    <div class="vehicle-details mt-3" style="display: none;">
+                        <small class="text-muted">Starting from $120/day</small>
+                        <br>
+                        <button class="btn btn-sm btn-outline-primary mt-2">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<!-- Features Section -->
+<div id="features" class="container mb-5">
+    <h2 class="text-center mb-5">
+        <i class="bi bi-star text-warning"></i> Why Choose Us
+    </h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm feature-card">
+                <div class="card-body">
+                    <i class="bi bi-car-front fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Wide Vehicle Selection</h5>
+                    <p class="card-text">Choose from motorcycles, cars, buses, trucks, and more to suit your specific needs.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm feature-card">
+                <div class="card-body">
+                    <i class="bi bi-shield-check fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Secure Booking</h5>
+                    <p class="card-text">Safe and secure booking process with instant confirmation and transparent pricing.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm feature-card">
+                <div class="card-body">
+                    <i class="bi bi-headset fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">24/7 Support</h5>
+                    <p class="card-text">Round-the-clock customer support for all your rental needs and emergencies.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Interactive Stats Section -->
+<div class="container mb-5">
+    <div class="row text-center">
+        <div class="col-md-3 col-sm-6 mb-4">
+            <div class="stat-card">
+                <i class="bi bi-car-front-fill fa-3x text-primary mb-3"></i>
+                <h3 class="counter" data-target="500">0</h3>
+                <p class="text-muted">Vehicles Available</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-4">
+            <div class="stat-card">
+                <i class="bi bi-people-fill fa-3x text-success mb-3"></i>
+                <h3 class="counter" data-target="10000">0</h3>
+                <p class="text-muted">Happy Customers</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-4">
+            <div class="stat-card">
+                <i class="bi bi-geo-alt-fill fa-3x text-info mb-3"></i>
+                <h3 class="counter" data-target="50">0</h3>
+                <p class="text-muted">Cities Covered</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-4">
+            <div class="stat-card">
+                <i class="bi bi-award-fill fa-3x text-warning mb-3"></i>
+                <h3 class="counter" data-target="15">0</h3>
+                <p class="text-muted">Years Experience</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action Section -->
+@if (Context.Session.GetString("UserId") == null)
+{
+    <div class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="card bg-primary text-white shadow">
+                    <div class="card-body py-5">
+                        <h3 class="card-title mb-3">
+                            <i class="bi bi-person-plus"></i> Ready to Get Started?
+                        </h3>
+                        <p class="card-text mb-4">Join our car rental management system and start managing your vehicle rentals efficiently.</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-light">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
+                            <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light">
+                                <i class="bi bi-person-plus"></i> Register
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Contact Section -->
+<div id="contact" class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+            <h2 class="mb-4">
+                <i class="bi bi-telephone text-primary"></i> Get In Touch
+            </h2>
+            <p class="lead mb-5">Have questions? We're here to help you find the perfect vehicle for your needs.</p>
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="contact-card">
+                        <i class="bi bi-telephone-fill fa-2x text-primary mb-3"></i>
+                        <h5>Call Us</h5>
+                        <p>+1 (555) 123-4567</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="contact-card">
+                        <i class="bi bi-envelope-fill fa-2x text-success mb-3"></i>
+                        <h5>Email Us</h5>
+                        <p>info@carrental.com</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="contact-card">
+                        <i class="bi bi-geo-alt-fill fa-2x text-info mb-3"></i>
+                        <h5>Visit Us</h5>
+                        <p>123 Main Street, City, State</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
