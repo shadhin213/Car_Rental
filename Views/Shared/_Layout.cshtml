@@ -24,7 +24,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link nav-btn text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="vehicleDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -42,29 +42,29 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="AvailableCars">
+                            <a class="nav-link nav-btn text-white" asp-area="" asp-controller="Home" asp-action="AvailableCars">
                                 <i class="bi bi-car-front"></i> Available Cars
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Services">
+                            <a class="nav-link nav-btn text-white" asp-area="" asp-controller="Home" asp-action="Services">
                                 <i class="bi bi-tools"></i> Services
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="About">
+                            <a class="nav-link nav-btn text-white" asp-area="" asp-controller="Home" asp-action="About">
                                 <i class="bi bi-info-circle"></i> About Us
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Contact">
+                            <a class="nav-link nav-btn text-white" asp-area="" asp-controller="Home" asp-action="Contact">
                                 <i class="bi bi-envelope"></i> Contact
                             </a>
                         </li>
                         @if (Context.Session.GetString("UserId") != null)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Dashboard">Dashboard</a>
+                                <a class="nav-link nav-btn text-white" asp-area="" asp-controller="Home" asp-action="Dashboard">Dashboard</a>
                             </li>
                         }
                     </ul>
@@ -72,10 +72,10 @@
                         @if (Context.Session.GetString("UserId") == null)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-white" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                <a class="nav-link nav-btn text-white" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                                <a class="nav-link nav-btn text-white" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
                             </li>
                         }
                         else
@@ -117,15 +117,58 @@
         @RenderBody()
     }
 
-    @if (Context.Session.GetString("UserId") == null || ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard")
+    @if (
+        ViewContext.RouteData.Values["Action"]?.ToString() == "Login" ||
+        ViewContext.RouteData.Values["Action"]?.ToString() == "Register" ||
+        ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard"
+    )
     {
         <!-- No footer for login, register, or dashboard pages -->
     }
     else
     {
-        <footer class="border-top footer text-muted">
-            <div class="container">
-                &copy; 2025 - Car Rental Management System - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <footer class="footer-section mt-5">
+            <div class="container py-5">
+                <div class="row gy-4 align-items-center">
+                    <div class="col-md-3 text-center text-md-start mb-3 mb-md-0 animate-fade-in">
+                        <h5 class="fw-bold mb-3">About Us</h5>
+                        <p class="small text-muted mb-0">We provide reliable, affordable, and convenient car rental services with a focus on customer satisfaction and safety.</p>
+                    </div>
+                    <div class="col-md-2 text-center text-md-start mb-3 mb-md-0 animate-fade-in" style="animation-delay:0.1s;">
+                        <h6 class="fw-bold mb-3">Links</h6>
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="@Url.Action("About", "Home")" class="footer-link">About Us</a></li>
+                            <li><a href="#" class="footer-link">Terms & Conditions</a></li>
+                            <li><a href="@Url.Action("Privacy", "Home")" class="footer-link">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 text-center text-md-start mb-3 mb-md-0 animate-fade-in" style="animation-delay:0.2s;">
+                        <h6 class="fw-bold mb-3">Contact Info</h6>
+                        <ul class="list-unstyled mb-0">
+                            <li><i class="bi bi-geo-alt-fill me-2"></i>123 Car Rental Street, City</li>
+                            <li><i class="bi bi-telephone-fill me-2"></i>+1 (555) 123-4567</li>
+                            <li><i class="bi bi-envelope-fill me-2"></i>info@carrental.com</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-2 text-center text-md-start mb-3 mb-md-0 animate-fade-in" style="animation-delay:0.3s;">
+                        <h6 class="fw-bold mb-3">Follow Us</h6>
+                        <div class="d-flex justify-content-center justify-content-md-start gap-2">
+                            <a href="#" class="footer-social"><i class="bi bi-facebook"></i></a>
+                            <a href="#" class="footer-social"><i class="bi bi-twitter"></i></a>
+                            <a href="#" class="footer-social"><i class="bi bi-instagram"></i></a>
+                            <a href="#" class="footer-social"><i class="bi bi-linkedin"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center text-md-end animate-fade-in" style="animation-delay:0.4s;">
+                        <img src="/favicon.ico" alt="Logo" style="width:48px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                    </div>
+                </div>
+                <hr class="my-4 animate-fade-in" style="animation-delay:0.5s;">
+                <div class="row">
+                    <div class="col-12 text-center animate-fade-in" style="animation-delay:0.6s;">
+                        <small class="text-muted">&copy; @DateTime.Now.Year Car Rental Management System. All rights reserved.</small>
+                    </div>
+                </div>
             </div>
         </footer>
     }
