@@ -404,21 +404,21 @@ html {
 
 /* Footer Section Styles */
 .footer-section {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  color: #343a40;
-  border-top: 1px solid #dee2e6;
-  box-shadow: 0 -2px 16px rgba(0,0,0,0.04);
+  background: linear-gradient(135deg, #111 0%, #222 100%);
+  color: #fff;
+  border-top: none;
+  box-shadow: 0 -2px 24px rgba(0,0,0,0.18);
   position: relative;
   overflow: hidden;
 }
 .footer-section::before {
   content: '';
   position: absolute;
-  top: -60px;
+  top: -1px;
   left: 0;
   width: 100%;
-  height: 180px;
-  background: url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" viewBox="0 0 1440 320" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="%230d6efd" fill-opacity="0.08" d="M0,160L60,170.7C120,181,240,203,360,197.3C480,192,600,160,720,133.3C840,107,960,85,1080,101.3C1200,117,1320,171,1380,197.3L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>');
+  height: 120px;
+  background: url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" viewBox="0 0 1440 320" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill="%23fff" fill-opacity="0.18" d="M0,160L60,170.7C120,181,240,203,360,197.3C480,192,600,160,720,133.3C840,107,960,85,1080,101.3C1200,117,1320,171,1380,197.3L1440,224L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path></svg>');
   background-repeat: no-repeat;
   background-size: cover;
   z-index: 0;
@@ -431,20 +431,31 @@ html {
   z-index: 1;
 }
 .footer-section h5, .footer-section h6 {
-  color: #0d6efd;
+  color: #ffe082;
+  font-weight: 700;
 }
-.footer-link {
-  color: #343a40;
-  text-decoration: none;
-  transition: color 0.2s, text-shadow 0.2s;
+.footer-section .footer-link {
+  color: #fff;
+}
+.footer-section .footer-link:hover, .footer-section .footer-link:focus {
+  color: #ffe082;
+}
+.footer-section .copyright-text, .footer-section small.text-muted {
+  color: #ffe082 !important;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.footer-section .footer-link:hover, .footer-section .footer-link:focus {
+  color: #ffe082;
+}
+.footer-section .about-description, .footer-section p.small.text-muted {
+  color: #ffe082;
   font-weight: 500;
-  display: inline-block;
-  position: relative;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  letter-spacing: 0.01em;
 }
-.footer-link:hover, .footer-link:focus {
-  color: #0d6efd;
-  text-shadow: 0 2px 8px rgba(13,110,253,0.08);
-  text-decoration: underline;
+.footer-section .footer-link:hover, .footer-section .footer-link:focus {
+  color: #ffe082;
 }
 .footer-social {
   color: #0d6efd;
@@ -460,8 +471,8 @@ html {
   transition: background 0.2s, color 0.2s, transform 0.2s;
 }
 .footer-social:hover, .footer-social:focus {
-  background: #0d6efd;
-  color: #fff;
+  background: #ffe082;
+  color: #6f42c1;
   transform: translateY(-3px) scale(1.1);
   text-decoration: none;
 }
