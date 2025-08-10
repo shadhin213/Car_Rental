@@ -40,6 +40,34 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult FleetManagement()
+    {
+        var userId = HttpContext.Session.GetString("UserId");
+        if (string.IsNullOrEmpty(userId))
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var userName = HttpContext.Session.GetString("UserName");
+        ViewBag.UserName = userName;
+        
+        return View();
+    }
+
+    public IActionResult FinesManagement()
+    {
+        var userId = HttpContext.Session.GetString("UserId");
+        if (string.IsNullOrEmpty(userId))
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var userName = HttpContext.Session.GetString("UserName");
+        ViewBag.UserName = userName;
+        
+        return View();
+    }
+
     public IActionResult Services()
     {
         return View();
