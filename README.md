@@ -31,18 +31,15 @@ View booking history.
 Leave reviews and feedback.
 
 🛠️ Technology Stack:
-Frontend: HTML, CSS, JavaScript
+Frontend: HTML, CSS, bootstrap
 
-Backend: [Specify your backend framework/language]
+Backend: ASP.NET Core MVC
 
-Database: MySQL / [Other DB used]
+Database: MySQL 
 
-Tools & Libraries: [List any frameworks, APIs, or tools used]
 
 📂 Project Structure:
-bash
-Copy
-Edit
+
 /project-root
 │── /frontend         # UI components and assets
 │── /backend          # Server-side code
@@ -51,32 +48,20 @@ Edit
 📦 Installation & Setup
 Clone the repository:
 
-bash
-Copy
-Edit
 git clone https://github.com/yourusername/car-rental-management.git
 Navigate to the project directory:
 
-bash
-Copy
-Edit
 cd car-rental-management
 Install dependencies:
 
-bash
-Copy
-Edit
 npm install   # Or pip install -r requirements.txt
 Set up the database using the provided SQL file.
 
 Run the application:
 
-bash
-Copy
-Edit
 npm start     # Or python app.py
 📸 Screenshots
-(Add screenshots of your application here for better visualization)
+Its Loding 
 
 📄 License
 This project is licensed under the MIT License – feel free to use and modify it.
