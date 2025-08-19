@@ -104,7 +104,12 @@
         </nav>
     </header>
     
-    @if (Context.Session.GetString("UserId") != null && ViewContext.RouteData.Values["Action"]?.ToString() != "Dashboard")
+    @if (
+        Context.Session.GetString("UserId") != null &&
+        ViewContext.RouteData.Values["Action"]?.ToString() != "Dashboard" &&
+        ViewContext.RouteData.Values["Action"]?.ToString() != "FleetManagement" &&
+        ViewContext.RouteData.Values["Action"]?.ToString() != "FinesManagement"
+    )
     {
         <div class="container">
             <main role="main" class="pb-3">

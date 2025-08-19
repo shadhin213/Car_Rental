@@ -15,7 +15,7 @@
         </nav>
 
         <!-- Sidebar -->
-        <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse" id="sidebarMenu">
+        <nav class="col-md-3  d-md-block bg-dark sidebar sticky-top vh-100" id="sidebarMenu">
             <div class="position-sticky pt-3">
                 <div class="text-center mb-4">
                     <h4 class="text-white">Car Rental System</h4>
@@ -24,7 +24,7 @@
                 
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="@Url.Action("Dashboard", "Home")">
+                        <a class="nav-link active text-white" href="#">
                             <i class="bi bi-speedometer2"></i> Dashboard
                         </a>
                     </li>
@@ -39,7 +39,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active text-white" href="@Url.Action("FleetManagement", "Home")">
+                        <a class="nav-link text-white" href="@Url.Action("FleetManagement", "Home")">
                             <i class="bi bi-truck"></i> Fleet Management
                         </a>
                     </li>
@@ -173,7 +173,8 @@
 
 <style>
     .sidebar {
-        min-height: 100vh;
+        width: 250px;
+    min-height: 100vh;
     }
     
     .border-left-primary {
@@ -207,15 +208,9 @@
     /* Responsive Design */
     @@media (max-width: 767.98px) {
         .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            width: 100%;
-            height: 100vh;
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
-            display: block !important;
+             position: fixed;
+        width: 100%;
+        margin-left: 0;
         }
         
         .sidebar.show {
@@ -227,8 +222,8 @@
         }
         
         main {
-            margin-left: 0 !important;
-            width: 100% !important;
+           margin-left: 0;
+        width: 100%;
         }
         
         .card-body {
@@ -251,8 +246,8 @@
 
     @@media (max-width: 575.98px) {
         .container-fluid {
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
+            padding-left: 0;
+            padding-right: 0;
         }
         
         .card {
@@ -282,7 +277,7 @@
         }
         
         main {
-            margin-left: 25% !important;
+            
             width: 75% !important;
         }
     }
@@ -323,13 +318,13 @@
     
     /* Ensure proper spacing on all devices */
     .row {
-        margin-left: -0.5rem;
-        margin-right: -0.5rem;
+        margin-left: 0;
+        margin-right: 0;
     }
     
     .col-12, .col-sm-6, .col-md-4, .col-md-6, .col-lg-8, .col-lg-4, .col-xl-3 {
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
+        padding-left: 0;
+        padding-right: 0;
     }
 
     /* Sidebar specific fixes */
@@ -343,6 +338,17 @@
         .sidebar.collapse:not(.show) {
             display: block !important;
         }
+    }
+
+    /* Set left margin to 0 for all elements */
+    .container-fluid,
+    .row,
+    .col-12, .col-sm-6, .col-md-4, .col-md-6, .col-lg-8, .col-lg-4, .col-xl-3,
+    main,
+    .card,
+    .card-body {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
     }
 
     /* Mobile sidebar overlay */
