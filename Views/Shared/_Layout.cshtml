@@ -182,5 +182,64 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <style id="global-scroll-isolation">
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        main {
+            height: 100vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Ensure any sidebar with this id scrolls independently */
+        #sidebarMenu {
+            overflow-y: auto;
+            max-height: 100vh;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+
+    <script>
+        // Global scroll isolation between main content and sidebar
+        (function() {
+            function setupIsolation() {
+                var sidebar = document.getElementById('sidebarMenu');
+                var mainEl = document.querySelector('main');
+
+                if (!mainEl) return;
+
+                if (sidebar) {
+                    sidebar.addEventListener('wheel', function(e) {
+                        e.stopPropagation();
+                        var atTop = this.scrollTop === 0;
+                        var atBottom = this.scrollTop + this.clientHeight >= this.scrollHeight;
+                        var delta = e.deltaY;
+                        if ((delta < 0 && atTop) || (delta > 0 && atBottom)) {
+                            e.preventDefault();
+                        }
+                    }, { passive: false });
+
+                    sidebar.addEventListener('touchstart', function(e){ e.stopPropagation(); }, { passive: true });
+                    sidebar.addEventListener('touchmove', function(e){ e.stopPropagation(); }, { passive: true });
+                    sidebar.addEventListener('scroll', function(e){ e.stopPropagation(); });
+                }
+
+                mainEl.addEventListener('wheel', function(e){ e.stopPropagation(); }, { passive: true });
+                mainEl.addEventListener('touchstart', function(e){ e.stopPropagation(); }, { passive: true });
+                mainEl.addEventListener('touchmove', function(e){ e.stopPropagation(); }, { passive: true });
+                mainEl.addEventListener('scroll', function(e){ e.stopPropagation(); });
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', setupIsolation);
+            } else {
+                setupIsolation();
+            }
+        })();
+    </script>
 </body>
 </html>

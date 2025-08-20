@@ -91,7 +91,7 @@
         </nav>
 
         <!-- Main content -->
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <main class="flex-grow-1 ms-auto px-3">
             <!-- Mobile top spacing -->
             <div class="d-md-none" style="height: 60px;"></div>
             
@@ -729,6 +729,47 @@
     .sidebar {
         min-height: 100vh;
         overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Prevent sidebar scroll from affecting main content */
+    .sidebar::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .sidebar::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+    }
+    
+    .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+    }
+    
+    .sidebar::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Ensure sidebar content doesn't cause page scroll */
+    .sidebar .position-sticky {
+        overflow-y: auto;
+        max-height: 100vh;
+        padding-bottom: 20px;
+    }
+    
+    /* Prevent main content from scrolling when sidebar is scrolled */
+    main {
+        overflow: hidden;
+    }
+    
+    /* Ensure main content can scroll independently */
+    main .container-fluid {
+        overflow-y: auto;
+        height: 100vh;
+        padding-bottom: 2rem;
     }
 
     /* Ensure sidebar is visible on desktop */
@@ -756,4 +797,83 @@
             z-index: -1;
         }
     }
-</style> 
+
+    /* Lock page scroll; allow only main to scroll */
+    html, body {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    main {
+        height: 100vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Ensure sidebar does not scroll with page scroll */
+    #sidebarMenu {
+        overflow-y: auto;
+        max-height: 100vh;
+        -webkit-overflow-scrolling: touch;
+    }
+</style>
+
+<script>
+    // Prevent sidebar scroll from affecting main page scroll and vice versa
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebarMenu');
+        const mainContent = document.querySelector('main');
+        
+        if (sidebar && mainContent) {
+            // Prevent sidebar scroll from affecting main content
+            sidebar.addEventListener('wheel', function(e) {
+                // Prevent the wheel event from bubbling up to the main page
+                e.stopPropagation();
+                
+                const scrollTop = this.scrollTop;
+                const scrollHeight = this.scrollHeight;
+                const height = this.clientHeight;
+                const delta = e.deltaY;
+                
+                // Check if we're at the top or bottom of the sidebar
+                if ((delta < 0 && scrollTop === 0) || 
+                    (delta > 0 && scrollTop + height >= scrollHeight)) {
+                    // Prevent default only when we can't scroll further in the sidebar
+                    e.preventDefault();
+                }
+            });
+            
+            // Prevent main content scroll from affecting sidebar
+            mainContent.addEventListener('wheel', function(e) {
+                // Prevent the wheel event from bubbling up to the sidebar
+                e.stopPropagation();
+            });
+            
+            // Also prevent touch events from affecting each other on mobile
+            sidebar.addEventListener('touchstart', function(e) {
+                e.stopPropagation();
+            });
+            
+            sidebar.addEventListener('touchmove', function(e) {
+                e.stopPropagation();
+            });
+            
+            mainContent.addEventListener('touchstart', function(e) {
+                e.stopPropagation();
+            });
+            
+            mainContent.addEventListener('touchmove', function(e) {
+                e.stopPropagation();
+            });
+            
+            // Prevent scroll events from propagating between elements
+            sidebar.addEventListener('scroll', function(e) {
+                e.stopPropagation();
+            });
+            
+            mainContent.addEventListener('scroll', function(e) {
+                e.stopPropagation();
+            });
+        }
+    });
+</script> 
