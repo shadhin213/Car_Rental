@@ -35,7 +35,7 @@
                                         <i class="bi bi-person-plus"></i> Get Started
                                     </a>
                                 }
-                                <a href="#vehicleTypes" class="btn btn-outline-light btn-lg">
+                                <a asp-controller="Home" asp-action="VehicleTypes" class="btn btn-outline-light btn-lg">
                                     <i class="bi bi-arrow-down"></i> Explore Vehicles
                                 </a>
                             </div>
@@ -62,7 +62,7 @@
                                 Trucks, vans, and commercial vehicles for all your business needs.
                             </p>
                             <div class="animate-slide-in-delay-2">
-                                <a href="#vehicleTypes" class="btn btn-light btn-lg me-3">
+                                <a asp-controller="Home" asp-action="VehicleTypes" class="btn btn-light btn-lg me-3">
                                     <i class="bi bi-building"></i> Business Solutions
                                 </a>
                                 <a href="#features" class="btn btn-outline-light btn-lg">
@@ -120,126 +120,7 @@
     </button>
 </div>
 
-<!-- Vehicle Types Section -->
-<div id="vehicleTypes" class="container mb-5">
-    <h2 class="text-center mb-5">
-        <i class="bi bi-truck text-primary"></i> Our Vehicle Types
-    </h2>
-    <div class="row g-4">
-        <div class="col-md-3 col-sm-6">
-            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="motor-bike">
-                <div class="card-body">
-                    <i class="bi bi-bicycle fa-3x text-primary mb-3"></i>
-                    <h5 class="card-title">Motor Bike</h5>
-                    <p class="card-text">Perfect for quick city rides and solo travel</p>
-                    <div class="vehicle-details mt-3" style="display: none;">
-                        <small class="text-muted">Starting from $15/day</small>
-                        <br>
-                        <button class="btn btn-sm btn-outline-primary mt-2">View Details</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="cng">
-                <div class="card-body">
-                    <i class="bi bi-fuel-pump fa-3x text-success mb-3"></i>
-                    <h5 class="card-title">CNG</h5>
-                    <p class="card-text">Eco-friendly vehicles for environmentally conscious travel</p>
-                    <div class="vehicle-details mt-3" style="display: none;">
-                        <small class="text-muted">Starting from $25/day</small>
-                        <br>
-                        <button class="btn btn-sm btn-outline-success mt-2">View Details</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="microbus">
-                <div class="card-body">
-                    <i class="bi bi-bus-front fa-3x text-info mb-3"></i>
-                    <h5 class="card-title">Microbus</h5>
-                    <p class="card-text">Ideal for group travel and family outings</p>
-                    <div class="vehicle-details mt-3" style="display: none;">
-                        <small class="text-muted">Starting from $45/day</small>
-                        <br>
-                        <button class="btn btn-sm btn-outline-info mt-2">View Details</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="truck">
-                <div class="card-body">
-                    <i class="bi bi-truck fa-3x text-warning mb-3"></i>
-                    <h5 class="card-title">Truck</h5>
-                    <p class="card-text">Heavy-duty vehicles for commercial and industrial use</p>
-                    <div class="vehicle-details mt-3" style="display: none;">
-                        <small class="text-muted">Starting from $80/day</small>
-                        <br>
-                        <button class="btn btn-sm btn-outline-warning mt-2">View Details</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="sedan">
-                <div class="card-body">
-                    <i class="bi bi-car-front fa-3x text-danger mb-3"></i>
-                    <h5 class="card-title">Sedan</h5>
-                    <p class="card-text">Comfortable and stylish cars for business and leisure</p>
-                    <div class="vehicle-details mt-3" style="display: none;">
-                        <small class="text-muted">Starting from $35/day</small>
-                        <br>
-                        <button class="btn btn-sm btn-outline-danger mt-2">View Details</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="suv">
-                <div class="card-body">
-                    <i class="bi bi-suv fa-3x text-secondary mb-3"></i>
-                    <h5 class="card-title">SUV</h5>
-                    <p class="card-text">Spacious vehicles perfect for adventure and family trips</p>
-                    <div class="vehicle-details mt-3" style="display: none;">
-                        <small class="text-muted">Starting from $55/day</small>
-                        <br>
-                        <button class="btn btn-sm btn-outline-secondary mt-2">View Details</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="van">
-                <div class="card-body">
-                    <i class="bi bi-van fa-3x text-dark mb-3"></i>
-                    <h5 class="card-title">Van</h5>
-                    <p class="card-text">Versatile vehicles for cargo and passenger transport</p>
-                    <div class="vehicle-details mt-3" style="display: none;">
-                        <small class="text-muted">Starting from $40/day</small>
-                        <br>
-                        <button class="btn btn-sm btn-outline-dark mt-2">View Details</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 col-sm-6">
-            <div class="card h-100 vehicle-card text-center shadow-sm" data-vehicle-type="bus">
-                <div class="card-body">
-                    <i class="bi bi-bus fa-3x text-primary mb-3"></i>
-                    <h5 class="card-title">Bus</h5>
-                    <p class="card-text">Large capacity vehicles for group transportation</p>
-                    <div class="vehicle-details mt-3" style="display: none;">
-                        <small class="text-muted">Starting from $120/day</small>
-                        <br>
-                        <button class="btn btn-sm btn-outline-primary mt-2">View Details</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
     
 <!-- Features Section -->
 <div id="features" class="container mb-5">

@@ -31,14 +31,12 @@
                                 <i class="bi bi-truck"></i> Vehicle Types
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="vehicleDropdown">
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-bicycle"></i> Motor Bike</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-fuel-pump"></i> CNG</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-bus-front"></i> Microbus</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-truck"></i> Truck</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-car-front"></i> Sedan</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-suv"></i> SUV</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-van"></i> Van</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="bi bi-bus"></i> Bus</a></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="VehicleTypes"><i class="bi bi-bicycle"></i> Motor Bike</a></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="VehicleTypes"><i class="bi bi-fuel-pump"></i> CNG</a></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="VehicleTypes"><i class="bi bi-car-front"></i> Private Car</a></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="VehicleTypes"><i class="bi bi-truck"></i> Pickup</a></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="VehicleTypes"><i class="bi bi-truck"></i> Truck</a></li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="VehicleTypes"><i class="bi bi-van"></i> Covered Van</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -186,11 +184,11 @@
     <style id="global-scroll-isolation">
         html, body {
             height: 100%;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         main {
-            height: 100vh;
+            min-height: 100vh;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }

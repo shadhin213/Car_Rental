@@ -83,6 +83,11 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult VehicleTypes()
+    {
+        return View();
+    }
+
     public IActionResult Privacy()
     {
         return View();
