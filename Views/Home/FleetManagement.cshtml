@@ -207,25 +207,25 @@
                             <input type="number" class="form-control" id="year" name="year" min="2000" max="2025" placeholder="2024" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="licensePlate" class="form-label">License Plate *</label>
-                            <input type="text" class="form-control" id="licensePlate" name="licensePlate" placeholder="ABC-123" required>
+                            <label for="registrationNumber" class="form-label">Registration Number *</label>
+                            <input type="text" class="form-control" id="registrationNumber" name="registrationNumber" placeholder="e.g., ABC-123" required>
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="chassisNumber" class="form-label">Chassis Number *</label>
+                            <input type="text" class="form-control" id="chassisNumber" name="chassisNumber" placeholder="e.g., 1HGBH41JXMN109186" required>
+                        </div>
                         <div class="col-md-6 mb-3">
                             <label for="color" class="form-label">Color *</label>
                             <input type="text" class="form-control" id="color" name="color" placeholder="e.g., Red, Blue" required>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="transmission" class="form-label">Transmission *</label>
-                            <select class="form-select" id="transmission" name="transmission" required>
-                                <option value="">Select Transmission</option>
-                                <option value="automatic">Automatic</option>
-                                <option value="manual">Manual</option>
-                            </select>
-                        </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="engineCapacity" class="form-label">Engine Capacity (CC) *</label>
+                            <input type="text" class="form-control" id="engineCapacity" name="engineCapacity" placeholder="e.g., 100cc, 2400cc" required>
+                        </div>
                         <div class="col-md-6 mb-3">
                             <label for="fuelType" class="form-label">Fuel Type *</label>
                             <select class="form-select" id="fuelType" name="fuelType" required>
@@ -237,15 +237,22 @@
                                 <option value="cng">CNG</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="dailyRate" class="form-label">Daily Rate ($) *</label>
                             <input type="number" class="form-control" id="dailyRate" name="dailyRate" min="10" step="0.01" placeholder="50.00" required>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="seats" class="form-label">Number of Seats</label>
                             <input type="number" class="form-control" id="seats" name="seats" min="1" max="50" placeholder="5">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="vehicleImage" class="form-label">Upload Image *</label>
+                            <input type="file" class="form-control" id="vehicleImage" name="vehicleImage" accept="image/*" required>
+                            <small class="form-text text-muted">Accepted formats: JPG, PNG, GIF (Max 5MB)</small>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -552,15 +559,60 @@ function submitAddCar() {
         const formData = new FormData(form);
         const carData = Object.fromEntries(formData);
         
-        // Show success message
-        alert('Car added successfully!');
+        // Collect features
+        const features = [];
+        const featureCheckboxes = form.querySelectorAll('input[name="features"]:checked');
+        featureCheckboxes.forEach(checkbox => {
+            features.push(checkbox.value);
+        });
         
-        // Close modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('addCarModal'));
-        modal.hide();
+        // Prepare data for API
+        const vehicleData = {
+            vehicleType: carData.vehicleType,
+            model: carData.model,
+            year: parseInt(carData.year),
+            registrationNumber: carData.registrationNumber,
+            chassisNumber: carData.chassisNumber,
+            color: carData.color,
+            engineCapacity: carData.engineCapacity,
+            fuelType: carData.fuelType,
+            dailyRate: parseFloat(carData.dailyRate),
+            seats: parseInt(carData.seats) || 0,
+            imageUrl: carData.vehicleImage ? URL.createObjectURL(carData.vehicleImage) : '',
+            description: carData.description || '',
+            features: features
+        };
         
-        // Reset form
-        form.reset();
+        // Send to server
+        fetch('@Url.Action("AddVehicle", "Home")', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(vehicleData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Car added successfully!');
+                
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addCarModal'));
+                modal.hide();
+                
+                // Reset form
+                form.reset();
+                
+                // Open new window to show all vehicles
+                window.open('@Url.Action("ViewAllVehicles", "Home")', '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error adding car. Please try again.');
+        });
     } else {
         form.reportValidity();
     }
