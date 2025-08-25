@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using CarRentalManagementSystem.Models;
 using CarRentalManagementSystem.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace CarRentalManagementSystem.Controllers;
 
@@ -10,16 +13,112 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly ApplicationDbContext? _context;
+    private readonly IWebHostEnvironment? _env;
 
-    public HomeController(ILogger<HomeController> logger, ApplicationDbContext? context = null)
+    public HomeController(ILogger<HomeController> logger, ApplicationDbContext? context = null, IWebHostEnvironment? env = null)
     {
         _logger = logger;
         _context = context;
+        _env = env;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        try
+        {
+            if (_context != null)
+            {
+                var vehicles = await _context.Vehicles
+                    .OrderByDescending(v => v.CreatedAt)
+                    .Take(6) // Show only 6 latest vehicles on home page
+                    .ToListAsync();
+
+                var vehicleViewModels = vehicles.Select(v => new VehicleViewModel
+                {
+                    Id = v.Id,
+                    VehicleType = v.VehicleType,
+                    Model = v.Model,
+                    Year = v.Year,
+                    RegistrationNumber = v.RegistrationNumber,
+                    ChassisNumber = v.ChassisNumber,
+                    Color = v.Color,
+                    EngineCapacity = v.EngineCapacity,
+                    FuelType = v.FuelType,
+                    DailyRate = v.DailyRate,
+                    Seats = v.Seats,
+                    Status = v.Status,
+                    ImageUrl = GetDefaultImageUrl(v.VehicleType, v.ImageUrl),
+                    Description = v.Description,
+                    Features = string.IsNullOrEmpty(v.Features) ? new List<string>() : v.Features.Split(',').ToList(),
+                    CreatedAt = v.CreatedAt
+                }).ToList();
+
+                ViewBag.FeaturedVehicles = vehicleViewModels;
+            }
+            else
+            {
+                ViewBag.FeaturedVehicles = new List<VehicleViewModel>();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving featured vehicles");
+            ViewBag.FeaturedVehicles = new List<VehicleViewModel>();
+        }
+        
         return View();
+    }
+
+    [HttpDelete]
+    [Route("Home/DeleteVehicle/{id}")]
+    public async Task<IActionResult> DeleteVehicle(int id)
+    {
+        try
+        {
+            if (_context == null)
+            {
+                return StatusCode(500, new { success = false, message = "Database context not available" });
+            }
+
+            var vehicle = await _context.Vehicles.FirstOrDefaultAsync(v => v.Id == id);
+            if (vehicle == null)
+            {
+                return NotFound(new { success = false, message = "Vehicle not found" });
+            }
+
+            // Attempt to delete the image file only if it is a local upload under wwwroot/uploads/vehicles
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(vehicle.ImageUrl) && _env != null)
+                {
+                    // Accept both relative "/uploads/vehicles/..." and absolute paths that map under webroot
+                    var imagePath = vehicle.ImageUrl.Replace("\\", "/");
+                    if (imagePath.StartsWith("/uploads/vehicles/", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var fullPath = Path.Combine(_env.WebRootPath, imagePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                        if (System.IO.File.Exists(fullPath))
+                        {
+                            System.IO.File.Delete(fullPath);
+                        }
+                    }
+                }
+            }
+            catch (Exception fileEx)
+            {
+                // Log and continue; failing to delete a file should not block DB deletion
+                _logger.LogWarning(fileEx, "Failed to delete vehicle image for vehicle {VehicleId}", id);
+            }
+
+            _context.Vehicles.Remove(vehicle);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { success = true, message = "Vehicle deleted successfully" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting vehicle {VehicleId}", id);
+            return StatusCode(500, new { success = false, message = ex.Message });
+        }
     }
 
     public IActionResult Dashboard()
@@ -36,9 +135,50 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult AvailableCars()
+    public async Task<IActionResult> AvailableCars()
     {
-        return View();
+        try
+        {
+            if (_context == null)
+            {
+                ViewBag.Vehicles = new List<VehicleViewModel>();
+                return View();
+            }
+
+            var vehicles = await _context.Vehicles
+                .Where(v => v.Status == "Available")
+                .OrderByDescending(v => v.CreatedAt)
+                .ToListAsync();
+
+            var vehicleViewModels = vehicles.Select(v => new VehicleViewModel
+            {
+                Id = v.Id,
+                VehicleType = v.VehicleType,
+                Model = v.Model,
+                Year = v.Year,
+                RegistrationNumber = v.RegistrationNumber,
+                ChassisNumber = v.ChassisNumber,
+                Color = v.Color,
+                EngineCapacity = v.EngineCapacity,
+                FuelType = v.FuelType,
+                DailyRate = v.DailyRate,
+                Seats = v.Seats,
+                Status = v.Status,
+                ImageUrl = GetDefaultImageUrl(v.VehicleType, v.ImageUrl),
+                Description = v.Description,
+                Features = string.IsNullOrEmpty(v.Features) ? new List<string>() : v.Features.Split(',').ToList(),
+                CreatedAt = v.CreatedAt
+            }).ToList();
+
+            ViewBag.Vehicles = vehicleViewModels;
+            return View();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving available vehicles");
+            ViewBag.Vehicles = new List<VehicleViewModel>();
+            return View();
+        }
     }
 
     public IActionResult FleetManagement()
@@ -143,7 +283,7 @@ public class HomeController : Controller
                 DailyRate = v.DailyRate,
                 Seats = v.Seats,
                 Status = v.Status,
-                ImageUrl = v.ImageUrl,
+                ImageUrl = GetDefaultImageUrl(v.VehicleType, v.ImageUrl),
                 Description = v.Description,
                 Features = string.IsNullOrEmpty(v.Features) ? new List<string>() : v.Features.Split(',').ToList(),
                 CreatedAt = v.CreatedAt
@@ -194,80 +334,161 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult ViewVehiclesByCategory(string category)
+    public async Task<IActionResult> ViewVehiclesByCategory(string category)
     {
-        // For now, we'll use mock data since we don't have a database connection
-        // In a real application, this would query the database for vehicles by category
-        var vehicles = GetMockVehiclesByCategory(category);
-        ViewBag.Category = category;
-        ViewBag.Vehicles = vehicles;
-        return View();
+        try
+        {
+            if (_context == null)
+            {
+                ViewBag.Category = category;
+                ViewBag.Vehicles = new List<VehicleViewModel>();
+                return View();
+            }
+
+            var vehicles = await _context.Vehicles
+                .Where(v => v.VehicleType.ToLower() == category.ToLower())
+                .OrderByDescending(v => v.CreatedAt)
+                .ToListAsync();
+
+            var vehicleViewModels = vehicles.Select(v => new VehicleViewModel
+            {
+                Id = v.Id,
+                VehicleType = v.VehicleType,
+                Model = v.Model,
+                Year = v.Year,
+                RegistrationNumber = v.RegistrationNumber,
+                ChassisNumber = v.ChassisNumber,
+                Color = v.Color,
+                EngineCapacity = v.EngineCapacity,
+                FuelType = v.FuelType,
+                DailyRate = v.DailyRate,
+                Seats = v.Seats,
+                Status = v.Status,
+                ImageUrl = GetDefaultImageUrl(v.VehicleType, v.ImageUrl),
+                Description = v.Description,
+                Features = string.IsNullOrEmpty(v.Features) ? new List<string>() : v.Features.Split(',').ToList(),
+                CreatedAt = v.CreatedAt
+            }).ToList();
+
+            ViewBag.Category = category;
+            ViewBag.Vehicles = vehicleViewModels;
+            return View();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving vehicles by category");
+            ViewBag.Category = category;
+            ViewBag.Vehicles = new List<VehicleViewModel>();
+            return View();
+        }
     }
 
-    private List<VehicleViewModel> GetMockVehiclesByCategory(string category)
+    private string GetDefaultImageUrl(string vehicleType, string currentImageUrl)
     {
-        var vehicles = new List<VehicleViewModel>();
-        
-        switch (category?.ToLower())
+        // If there's already an image URL, use it
+        if (!string.IsNullOrEmpty(currentImageUrl))
         {
-            case "motor-bike":
-                vehicles.AddRange(new List<VehicleViewModel>
-                {
-                    new VehicleViewModel { Id = 1, VehicleType = "Motor Bike", Model = "Honda CG125", Year = 2023, RegistrationNumber = "MB-001", Color = "Red", EngineCapacity = "125cc", FuelType = "Petrol", DailyRate = 15.00M, Seats = 2, Status = "Available", ImageUrl = "/images/motor-bike-1.jpg" },
-                    new VehicleViewModel { Id = 2, VehicleType = "Motor Bike", Model = "Yamaha YBR125", Year = 2022, RegistrationNumber = "MB-002", Color = "Blue", EngineCapacity = "125cc", FuelType = "Petrol", DailyRate = 18.00M, Seats = 2, Status = "Available", ImageUrl = "/images/motor-bike-2.jpg" },
-                    new VehicleViewModel { Id = 3, VehicleType = "Motor Bike", Model = "Suzuki GSX-R150", Year = 2024, RegistrationNumber = "MB-003", Color = "Black", EngineCapacity = "150cc", FuelType = "Petrol", DailyRate = 25.00M, Seats = 2, Status = "Rented", ImageUrl = "/images/motor-bike-3.jpg" }
-                });
-                break;
-                
-            case "cng":
-                vehicles.AddRange(new List<VehicleViewModel>
-                {
-                    new VehicleViewModel { Id = 4, VehicleType = "CNG", Model = "Toyota Corolla CNG", Year = 2023, RegistrationNumber = "CNG-001", Color = "White", EngineCapacity = "1800cc", FuelType = "CNG", DailyRate = 25.00M, Seats = 5, Status = "Available", ImageUrl = "/images/cng-1.jpg" },
-                    new VehicleViewModel { Id = 5, VehicleType = "CNG", Model = "Honda City CNG", Year = 2022, RegistrationNumber = "CNG-002", Color = "Silver", EngineCapacity = "1500cc", FuelType = "CNG", DailyRate = 28.00M, Seats = 5, Status = "Available", ImageUrl = "/images/cng-2.jpg" }
-                });
-                break;
-                
-            case "private-car":
-                vehicles.AddRange(new List<VehicleViewModel>
-                {
-                    new VehicleViewModel { Id = 6, VehicleType = "Private Car", Model = "Toyota Camry", Year = 2024, RegistrationNumber = "PC-001", Color = "Black", EngineCapacity = "2500cc", FuelType = "Petrol", DailyRate = 75.00M, Seats = 5, Status = "Available", ImageUrl = "/images/car-1.jpg" },
-                    new VehicleViewModel { Id = 7, VehicleType = "Private Car", Model = "Honda Civic", Year = 2023, RegistrationNumber = "PC-002", Color = "White", EngineCapacity = "1800cc", FuelType = "Petrol", DailyRate = 65.00M, Seats = 5, Status = "Rented", ImageUrl = "/images/car-2.jpg" },
-                    new VehicleViewModel { Id = 8, VehicleType = "Private Car", Model = "BMW 3 Series", Year = 2024, RegistrationNumber = "PC-003", Color = "Blue", EngineCapacity = "2000cc", FuelType = "Petrol", DailyRate = 120.00M, Seats = 5, Status = "Available", ImageUrl = "/images/car-3.jpg" },
-                    new VehicleViewModel { Id = 9, VehicleType = "Private Car", Model = "Mercedes C-Class", Year = 2023, RegistrationNumber = "PC-004", Color = "Silver", EngineCapacity = "2000cc", FuelType = "Diesel", DailyRate = 150.00M, Seats = 5, Status = "Available", ImageUrl = "/images/car-4.jpg" }
-                });
-                break;
-                
-            case "pickup":
-                vehicles.AddRange(new List<VehicleViewModel>
-                {
-                    new VehicleViewModel { Id = 10, VehicleType = "Pickup", Model = "Ford F-150", Year = 2023, RegistrationNumber = "PK-001", Color = "Red", EngineCapacity = "3500cc", FuelType = "Petrol", DailyRate = 80.00M, Seats = 5, Status = "Available", ImageUrl = "/images/pickup-1.jpg" },
-                    new VehicleViewModel { Id = 11, VehicleType = "Pickup", Model = "Toyota Hilux", Year = 2022, RegistrationNumber = "PK-002", Color = "White", EngineCapacity = "2400cc", FuelType = "Diesel", DailyRate = 70.00M, Seats = 5, Status = "Available", ImageUrl = "/images/pickup-2.jpg" }
-                });
-                break;
-                
-            case "truck":
-                vehicles.AddRange(new List<VehicleViewModel>
-                {
-                    new VehicleViewModel { Id = 12, VehicleType = "Truck", Model = "Volvo FH16", Year = 2023, RegistrationNumber = "TR-001", Color = "Blue", EngineCapacity = "16000cc", FuelType = "Diesel", DailyRate = 200.00M, Seats = 3, Status = "Available", ImageUrl = "/images/truck-1.jpg" },
-                    new VehicleViewModel { Id = 13, VehicleType = "Truck", Model = "Scania R500", Year = 2022, RegistrationNumber = "TR-002", Color = "Red", EngineCapacity = "13000cc", FuelType = "Diesel", DailyRate = 180.00M, Seats = 3, Status = "Rented", ImageUrl = "/images/truck-2.jpg" }
-                });
-                break;
-                
-            case "covered-van":
-                vehicles.AddRange(new List<VehicleViewModel>
-                {
-                    new VehicleViewModel { Id = 14, VehicleType = "Covered Van", Model = "Mercedes Sprinter", Year = 2023, RegistrationNumber = "CV-001", Color = "White", EngineCapacity = "2200cc", FuelType = "Diesel", DailyRate = 90.00M, Seats = 3, Status = "Available", ImageUrl = "/images/van-1.jpg" },
-                    new VehicleViewModel { Id = 15, VehicleType = "Covered Van", Model = "Ford Transit", Year = 2022, RegistrationNumber = "CV-002", Color = "Silver", EngineCapacity = "2000cc", FuelType = "Diesel", DailyRate = 85.00M, Seats = 3, Status = "Available", ImageUrl = "/images/van-2.jpg" }
-                });
-                break;
+            return currentImageUrl;
         }
-        
-        return vehicles;
+
+        // Return default images based on vehicle type
+        return vehicleType.ToLower() switch
+        {
+            "motor bike" => "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
+            "cng" => "https://images.unsplash.com/photo-1549924231-f129b911e442?w=400&h=300&fit=crop",
+            "private car" => "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=300&fit=crop",
+            "pickup" => "https://images.unsplash.com/photo-1582639510494-c80b5de9f148?w=400&h=300&fit=crop",
+            "truck" => "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=400&h=300&fit=crop",
+            "covered van" => "https://images.unsplash.com/photo-1582639510494-c80b5de9f148?w=400&h=300&fit=crop",
+            _ => "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=300&fit=crop"
+        };
     }
 
     public IActionResult Privacy()
     {
         return View();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetFleet()
+    {
+        try
+        {
+            if (_context == null)
+            {
+                return Ok(new List<VehicleViewModel>());
+            }
+
+            var vehicles = await _context.Vehicles
+                .OrderByDescending(v => v.CreatedAt)
+                .ToListAsync();
+
+            var vehicleViewModels = vehicles.Select(v => new VehicleViewModel
+            {
+                Id = v.Id,
+                VehicleType = v.VehicleType,
+                Model = v.Model,
+                Year = v.Year,
+                RegistrationNumber = v.RegistrationNumber,
+                ChassisNumber = v.ChassisNumber,
+                Color = v.Color,
+                EngineCapacity = v.EngineCapacity,
+                FuelType = v.FuelType,
+                DailyRate = v.DailyRate,
+                Seats = v.Seats,
+                Status = v.Status,
+                ImageUrl = GetDefaultImageUrl(v.VehicleType, v.ImageUrl),
+                Description = v.Description,
+                Features = string.IsNullOrEmpty(v.Features) ? new List<string>() : v.Features.Split(',').ToList(),
+                CreatedAt = v.CreatedAt
+            }).ToList();
+
+            return Ok(vehicleViewModels);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error retrieving fleet");
+            return StatusCode(500, new { success = false, message = ex.Message });
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UploadVehicleImage(IFormFile file)
+    {
+        try
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest(new { success = false, message = "No file uploaded" });
+            }
+
+            if (_env == null)
+            {
+                return StatusCode(500, new { success = false, message = "Hosting environment not available" });
+            }
+
+            var uploadsRoot = Path.Combine(_env.WebRootPath, "uploads", "vehicles");
+            if (!Directory.Exists(uploadsRoot))
+            {
+                Directory.CreateDirectory(uploadsRoot);
+            }
+
+            var safeFileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) + Path.GetExtension(file.FileName);
+            var fullPath = Path.Combine(uploadsRoot, safeFileName);
+
+            using (var stream = System.IO.File.Create(fullPath))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var relativePath = $"/uploads/vehicles/{safeFileName}";
+            return Ok(new { success = true, url = relativePath });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error uploading vehicle image");
+            return StatusCode(500, new { success = false, message = ex.Message });
+        }
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

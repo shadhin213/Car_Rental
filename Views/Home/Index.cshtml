@@ -2,6 +2,32 @@
     ViewData["Title"] = "Home Page";
 }
 
+<style>
+    .vehicle-card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .vehicle-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .vehicle-card .card-img-top {
+        padding: 0 !important;
+        overflow: hidden;
+    }
+    
+    .vehicle-card img {
+        height: 200px;
+        object-fit: cover;
+        width: 100%;
+        border-radius: 8px 8px 0 0;
+    }
+</style>
+
 <!-- Hero Slider Section -->
 <div id="heroSlider" class="carousel slide mb-5" data-bs-ride="carousel">
     <div class="carousel-indicators">
@@ -158,13 +184,104 @@
     </div>
 </div>
 
+<!-- Featured Vehicles Section -->
+<div class="container mb-5">
+    <h2 class="text-center mb-5">
+        <i class="bi bi-car-front text-primary"></i> Featured Vehicles
+    </h2>
+    <div class="row g-4">
+        @{
+            var featuredVehicles = ViewBag.FeaturedVehicles as List<CarRentalManagementSystem.Models.VehicleViewModel> ?? new List<CarRentalManagementSystem.Models.VehicleViewModel>();
+        }
+        
+        @if (featuredVehicles.Any())
+        {
+            @foreach (var vehicle in featuredVehicles.Take(6))
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 shadow-sm vehicle-card">
+                        <div class="card-img-top bg-light text-center p-4 position-relative">
+                            @if (!string.IsNullOrEmpty(vehicle.ImageUrl))
+                            {
+                                <img src="@vehicle.ImageUrl" alt="@vehicle.Model" class="img-fluid" style="max-height: 200px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                @switch (vehicle.VehicleType.ToLower())
+                                {
+                                    case "motor bike":
+                                        <i class="bi bi-bicycle" style="font-size: 4rem; color: #6f42c1;"></i>
+                                        break;
+                                    case "cng":
+                                        <i class="bi bi-fuel-pump" style="font-size: 4rem; color: #28a745;"></i>
+                                        break;
+                                    case "private car":
+                                        <i class="bi bi-car-front" style="font-size: 4rem; color: #007bff;"></i>
+                                        break;
+                                    case "pickup":
+                                        <i class="bi bi-truck" style="font-size: 4rem; color: #ffc107;"></i>
+                                        break;
+                                    case "truck":
+                                        <i class="bi bi-truck" style="font-size: 4rem; color: #fd7e14;"></i>
+                                        break;
+                                    case "covered van":
+                                        <i class="bi bi-van" style="font-size: 4rem; color: #dc3545;"></i>
+                                        break;
+                                    default:
+                                        <i class="bi bi-car-front" style="font-size: 4rem; color: #6c757d;"></i>
+                                        break;
+                                }
+                            }
+                            <span class="badge @(vehicle.Status == "Available" ? "bg-success" : "bg-warning") position-absolute top-0 end-0 m-2">
+                                @vehicle.Status
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">@vehicle.Model</h5>
+                            <p class="card-text text-muted">
+                                @vehicle.VehicleType • @vehicle.Year • @vehicle.FuelType
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-primary fw-bold">$@vehicle.DailyRate/day</span>
+                                <small class="text-muted">@vehicle.EngineCapacity</small>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="@Url.Action("AvailableCars", "Home")" class="btn btn-primary w-100">
+                                <i class="bi bi-calendar-plus"></i> Rent Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No vehicles available at the moment. Please check back later.
+                </div>
+            </div>
+        }
+    </div>
+    
+    @if (featuredVehicles.Any())
+    {
+        <div class="text-center mt-4">
+            <a href="@Url.Action("AvailableCars", "Home")" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-car-front"></i> View All Vehicles
+            </a>
+        </div>
+    }
+</div>
+
 <!-- Interactive Stats Section -->
 <div class="container mb-5">
     <div class="row text-center">
         <div class="col-md-3 col-sm-6 mb-4">
             <div class="stat-card">
                 <i class="bi bi-car-front-fill fa-3x text-primary mb-3"></i>
-                <h3 class="counter" data-target="500">0</h3>
+                <h3 class="counter" data-target="@(featuredVehicles.Count > 0 ? featuredVehicles.Count : 0)">0</h3>
                 <p class="text-muted">Vehicles Available</p>
             </div>
         </div>

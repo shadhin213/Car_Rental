@@ -523,12 +523,28 @@ function editVehicleFromModal() {
 }
 
 function deleteVehicle(vehicleId) {
-    if (confirm('Are you sure you want to delete this vehicle? This action cannot be undone.')) {
-        // Here you would typically make an AJAX call to delete the vehicle
-        alert('Vehicle deleted successfully!');
-        // Reload the page to reflect changes
-        location.reload();
+    if (!confirm('Are you sure you want to delete this vehicle? This action cannot be undone.')) {
+        return;
     }
+    fetch('@Url.Action("DeleteVehicle", "Home")/' + vehicleId, {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data && data.success) {
+            alert('Vehicle deleted successfully!');
+            location.reload();
+        } else {
+            alert('Failed to delete vehicle: ' + (data && data.message ? data.message : 'Unknown error'));
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Error deleting vehicle.');
+    });
 }
 
 function exportVehicles() {

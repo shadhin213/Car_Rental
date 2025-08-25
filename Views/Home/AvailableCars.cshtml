@@ -71,132 +71,96 @@
 
     <!-- Cars Grid -->
     <div class="row" id="carsGrid">
-        <!-- Sample Car Cards -->
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-img-top bg-light text-center p-4">
-                    <i class="bi bi-car-front" style="font-size: 4rem; color: #007bff;"></i>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Toyota Camry</h5>
-                    <p class="card-text text-muted">Sedan • Automatic • Petrol</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="badge bg-success">Available</span>
-                        <span class="text-primary fw-bold">$75/day</span>
+        @{
+            var vehicles = ViewBag.Vehicles as List<CarRentalManagementSystem.Models.VehicleViewModel> ?? new List<CarRentalManagementSystem.Models.VehicleViewModel>();
+        }
+        
+        @if (vehicles.Any())
+        {
+            @foreach (var vehicle in vehicles)
+            {
+                <div class="col-lg-4 col-md-6 mb-4 vehicle-item" 
+                     data-vehicle-type="@vehicle.VehicleType.ToLower().Replace(" ", "-")"
+                     data-price="@vehicle.DailyRate"
+                     data-fuel="@vehicle.FuelType.ToLower()">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-img-top bg-light text-center p-4 position-relative">
+                            @if (!string.IsNullOrEmpty(vehicle.ImageUrl))
+                            {
+                                <img src="@vehicle.ImageUrl" alt="@vehicle.Model" class="img-fluid" style="max-height: 200px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                @switch (vehicle.VehicleType.ToLower())
+                                {
+                                    case "motor bike":
+                                        <i class="bi bi-bicycle" style="font-size: 4rem; color: #6f42c1;"></i>
+                                        break;
+                                    case "cng":
+                                        <i class="bi bi-fuel-pump" style="font-size: 4rem; color: #28a745;"></i>
+                                        break;
+                                    case "private car":
+                                        <i class="bi bi-car-front" style="font-size: 4rem; color: #007bff;"></i>
+                                        break;
+                                    case "pickup":
+                                        <i class="bi bi-truck" style="font-size: 4rem; color: #ffc107;"></i>
+                                        break;
+                                    case "truck":
+                                        <i class="bi bi-truck" style="font-size: 4rem; color: #fd7e14;"></i>
+                                        break;
+                                    case "covered van":
+                                        <i class="bi bi-van" style="font-size: 4rem; color: #dc3545;"></i>
+                                        break;
+                                    default:
+                                        <i class="bi bi-car-front" style="font-size: 4rem; color: #6c757d;"></i>
+                                        break;
+                                }
+                            }
+                            <span class="badge @(vehicle.Status == "Available" ? "bg-success" : "bg-warning") status-badge position-absolute top-0 end-0 m-2">
+                                @vehicle.Status
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">@vehicle.Model</h5>
+                            <p class="card-text text-muted">
+                                @vehicle.VehicleType • @vehicle.Year • @vehicle.FuelType
+                                @if (vehicle.Seats > 0)
+                                {
+                                    <span>• @vehicle.Seats Seats</span>
+                                }
+                            </p>
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-gear"></i> @vehicle.EngineCapacity • 
+                                    <i class="bi bi-palette"></i> @vehicle.Color
+                                </small>
+                            </div>
+                            @if (!string.IsNullOrEmpty(vehicle.Description))
+                            {
+                                <p class="card-text small">@vehicle.Description</p>
+                            }
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-primary fw-bold">$@vehicle.DailyRate/day</span>
+                                <small class="text-muted">Reg: @vehicle.RegistrationNumber</small>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <button class="btn btn-primary w-100">
+                                <i class="bi bi-calendar-plus"></i> Rent Now
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="card-footer bg-transparent">
-                    <button class="btn btn-primary w-100">
-                        <i class="bi bi-calendar-plus"></i> Rent Now
-                    </button>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No vehicles available at the moment. Please check back later.
                 </div>
             </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-img-top bg-light text-center p-4">
-                    <i class="bi bi-suv" style="font-size: 4rem; color: #28a745;"></i>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Honda CR-V</h5>
-                    <p class="card-text text-muted">SUV • Automatic • Petrol</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="badge bg-success">Available</span>
-                        <span class="text-primary fw-bold">$95/day</span>
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent">
-                    <button class="btn btn-primary w-100">
-                        <i class="bi bi-calendar-plus"></i> Rent Now
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-img-top bg-light text-center p-4">
-                    <i class="bi bi-truck" style="font-size: 4rem; color: #ffc107;"></i>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Ford F-150</h5>
-                    <p class="card-text text-muted">Truck • Automatic • Petrol</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="badge bg-success">Available</span>
-                        <span class="text-primary fw-bold">$120/day</span>
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent">
-                    <button class="btn btn-primary w-100">
-                        <i class="bi bi-calendar-plus"></i> Rent Now
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-img-top bg-light text-center p-4">
-                    <i class="bi bi-van" style="font-size: 4rem; color: #dc3545;"></i>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Mercedes Sprinter</h5>
-                    <p class="card-text text-muted">Van • Automatic • Diesel</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="badge bg-success">Available</span>
-                        <span class="text-primary fw-bold">$150/day</span>
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent">
-                    <button class="btn btn-primary w-100">
-                        <i class="bi bi-calendar-plus"></i> Rent Now
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-img-top bg-light text-center p-4">
-                    <i class="bi bi-bicycle" style="font-size: 4rem; color: #6f42c1;"></i>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Honda CBR600RR</h5>
-                    <p class="card-text text-muted">Motorcycle • Manual • Petrol</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="badge bg-success">Available</span>
-                        <span class="text-primary fw-bold">$45/day</span>
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent">
-                    <button class="btn btn-primary w-100">
-                        <i class="bi bi-calendar-plus"></i> Rent Now
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-img-top bg-light text-center p-4">
-                    <i class="bi bi-bus" style="font-size: 4rem; color: #fd7e14;"></i>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">Mercedes-Benz Bus</h5>
-                    <p class="card-text text-muted">Bus • Automatic • Diesel</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="badge bg-success">Available</span>
-                        <span class="text-primary fw-bold">$200/day</span>
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent">
-                    <button class="btn btn-primary w-100">
-                        <i class="bi bi-calendar-plus"></i> Rent Now
-                    </button>
-                </div>
-            </div>
-        </div>
+        }
     </div>
 
     <!-- Pagination -->
@@ -224,12 +188,60 @@
         // Add filter functionality
         document.addEventListener('DOMContentLoaded', function() {
             const filterSelects = document.querySelectorAll('select');
-            filterSelects.forEach(select => {
-                select.addEventListener('change', function() {
-                    // Add filter logic here
-                    console.log('Filter changed:', this.id, this.value);
+            const vehicleItems = document.querySelectorAll('.vehicle-item');
+            
+            function filterVehicles() {
+                const vehicleType = document.getElementById('vehicleType').value;
+                const priceRange = document.getElementById('priceRange').value;
+                const fuelType = document.getElementById('fuelType').value;
+                
+                vehicleItems.forEach(item => {
+                    let show = true;
+                    
+                    // Filter by vehicle type
+                    if (vehicleType && item.dataset.vehicleType !== vehicleType) {
+                        show = false;
+                    }
+                    
+                    // Filter by price range
+                    if (priceRange) {
+                        const price = parseFloat(item.dataset.price);
+                        switch (priceRange) {
+                            case '0-50':
+                                if (price > 50) show = false;
+                                break;
+                            case '50-100':
+                                if (price < 50 || price > 100) show = false;
+                                break;
+                            case '100-200':
+                                if (price < 100 || price > 200) show = false;
+                                break;
+                            case '200+':
+                                if (price < 200) show = false;
+                                break;
+                        }
+                    }
+                    
+                    // Filter by fuel type
+                    if (fuelType && item.dataset.fuel !== fuelType) {
+                        show = false;
+                    }
+                    
+                    // Show/hide item
+                    item.style.display = show ? 'block' : 'none';
                 });
+                
+                // Update count
+                const visibleCount = document.querySelectorAll('.vehicle-item[style*="block"], .vehicle-item:not([style*="none"])').length;
+                console.log(`Showing ${visibleCount} vehicles`);
+            }
+            
+            filterSelects.forEach(select => {
+                select.addEventListener('change', filterVehicles);
             });
+            
+            // Initial filter
+            filterVehicles();
         });
     </script>
 } 
