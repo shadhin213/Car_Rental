@@ -262,7 +262,7 @@
                                     <button class="btn btn-outline-primary btn-sm flex-fill" onclick="viewVehicleDetails(@vehicle.Id)">
                                         <i class="bi bi-eye"></i> View
                                     </button>
-                                    <button class="btn btn-outline-warning btn-sm" onclick="editVehicle(@vehicle.Id)">
+                                    <button class="btn btn-outline-warning btn-sm" onclick="openEditVehicleModal(@vehicle.Id)">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <button class="btn btn-outline-danger btn-sm" onclick="deleteVehicle(@vehicle.Id)">
@@ -339,7 +339,7 @@
                                     <button class="btn btn-outline-primary" onclick="viewVehicleDetails(@vehicle.Id)">
                                         <i class="bi bi-eye"></i>
                                     </button>
-                                    <button class="btn btn-outline-warning" onclick="editVehicle(@vehicle.Id)">
+                                    <button class="btn btn-outline-warning" onclick="openEditVehicleModal(@vehicle.Id)">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <button class="btn btn-outline-danger" onclick="deleteVehicle(@vehicle.Id)">
@@ -377,6 +377,116 @@
         </div>
     </div>
 </div>
+
+<!-- Edit Vehicle Modal (same structure as FleetManagement's "Edit Vehicle Information") -->
+<div class="modal fade" id="editVehicleModal" tabindex="-1" aria-labelledby="editVehicleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="editVehicleModalLabel">
+                    <i class="bi bi-pencil-square"></i> Edit Vehicle Information
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editVehicleFormVAV">
+                    <input type="hidden" id="vav_editVehicleId" name="id">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="vav_editVehicleType" class="form-label">Vehicle Type *</label>
+                            <select class="form-select" id="vav_editVehicleType" name="vehicleType" required>
+                                <option value="">Select Vehicle Type</option>
+                                <option value="motor bike">Motor Bike</option>
+                                <option value="cng">CNG</option>
+                                <option value="private car">Private Car</option>
+                                <option value="pickup">Pickup</option>
+                                <option value="truck">Truck</option>
+                                <option value="covered van">Covered Van</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vav_editModel" class="form-label">Model *</label>
+                            <input type="text" class="form-control" id="vav_editModel" name="model" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="vav_editYear" class="form-label">Year *</label>
+                            <input type="number" class="form-control" id="vav_editYear" name="year" min="2000" max="2025" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vav_editRegistrationNumber" class="form-label">Registration Number *</label>
+                            <input type="text" class="form-control" id="vav_editRegistrationNumber" name="registrationNumber" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="vav_editChassisNumber" class="form-label">Chassis Number *</label>
+                            <input type="text" class="form-control" id="vav_editChassisNumber" name="chassisNumber" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vav_editColor" class="form-label">Color *</label>
+                            <input type="text" class="form-control" id="vav_editColor" name="color" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="vav_editEngineCapacity" class="form-label">Engine Capacity (CC) *</label>
+                            <input type="text" class="form-control" id="vav_editEngineCapacity" name="engineCapacity" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vav_editFuelType" class="form-label">Fuel Type *</label>
+                            <select class="form-select" id="vav_editFuelType" name="fuelType" required>
+                                <option value="">Select Fuel Type</option>
+                                <option value="petrol">Petrol</option>
+                                <option value="diesel">Diesel</option>
+                                <option value="electric">Electric</option>
+                                <option value="hybrid">Hybrid</option>
+                                <option value="cng">CNG</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="vav_editDailyRate" class="form-label">Daily Rate ($) *</label>
+                            <input type="number" class="form-control" id="vav_editDailyRate" name="dailyRate" min="10" step="0.01" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vav_editSeats" class="form-label">Number of Seats</label>
+                            <input type="number" class="form-control" id="vav_editSeats" name="seats" min="1" max="50">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="vav_editStatus" class="form-label">Status *</label>
+                            <select class="form-select" id="vav_editStatus" name="status" required>
+                                <option value="available">Available</option>
+                                <option value="rented">Rented</option>
+                                <option value="maintenance">Under Maintenance</option>
+                                <option value="out-of-service">Out of Service</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vav_editVehicleImage" class="form-label">Update Image</label>
+                            <input type="file" class="form-control" id="vav_editVehicleImage" name="vehicleImage" accept="image/*">
+                            <small class="form-text text-muted">Leave empty to keep current image</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vav_editDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="vav_editDescription" name="description" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning" onclick="submitEditVehicleFromVAV()">
+                    <i class="bi bi-pencil-square"></i> Update Vehicle
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>
 
 <script>
 let currentVehicleId = null;
@@ -511,9 +621,98 @@ function viewVehicleDetails(vehicleId) {
     }
 }
 
-function editVehicle(vehicleId) {
-    // Redirect to fleet management with edit mode
-    window.location.href = '@Url.Action("FleetManagement", "Home")?editId=' + vehicleId;
+async function openEditVehicleModal(vehicleId) {
+    try {
+        const vehicles = @Html.Raw(Json.Serialize(vehicles));
+        const v = vehicles.find(x => x.id === vehicleId);
+        if (!v) return;
+
+        // Populate form
+        document.getElementById('vav_editVehicleId').value = v.id;
+        document.getElementById('vav_editVehicleType').value = (v.vehicleType || '').toLowerCase();
+        document.getElementById('vav_editModel').value = v.model || '';
+        document.getElementById('vav_editYear').value = v.year || '';
+        document.getElementById('vav_editRegistrationNumber').value = v.registrationNumber || '';
+        document.getElementById('vav_editChassisNumber').value = v.chassisNumber || '';
+        document.getElementById('vav_editColor').value = v.color || '';
+        document.getElementById('vav_editEngineCapacity').value = v.engineCapacity || '';
+        document.getElementById('vav_editFuelType').value = (v.fuelType || '').toLowerCase();
+        document.getElementById('vav_editDailyRate').value = v.dailyRate || '';
+        document.getElementById('vav_editSeats').value = v.seats || '';
+        document.getElementById('vav_editStatus').value = (v.status || '').toLowerCase().replace(' ', '-');
+        document.getElementById('vav_editDescription').value = v.description || '';
+
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('editVehicleModal'));
+        modal.show();
+    } catch (e) {
+        console.error(e);
+        alert('Failed to open edit modal');
+    }
+}
+
+function submitEditVehicleFromVAV() {
+    const form = document.getElementById('editVehicleFormVAV');
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+
+    const fd = new FormData(form);
+    const payload = Object.fromEntries(fd);
+
+    // map types
+    const updateData = {
+        id: parseInt(payload.id),
+        vehicleType: payload.vehicleType,
+        model: payload.model,
+        year: parseInt(payload.year),
+        registrationNumber: payload.registrationNumber,
+        chassisNumber: payload.chassisNumber,
+        color: payload.color,
+        engineCapacity: payload.engineCapacity,
+        fuelType: payload.fuelType,
+        dailyRate: parseFloat(payload.dailyRate),
+        seats: parseInt(payload.seats || '0'),
+        status: payload.status,
+        description: payload.description || '',
+        features: []
+    };
+
+    const imageFile = document.getElementById('vav_editVehicleImage').files[0];
+    if (imageFile) {
+        const imgFd = new FormData();
+        imgFd.append('file', imageFile);
+        fetch('@Url.Action("UploadVehicleImage", "Home")', { method: 'POST', body: imgFd })
+            .then(r => r.json())
+            .then(j => {
+                if (j.success) {
+                    updateData.imageUrl = j.url;
+                    return doUpdate(updateData);
+                }
+                throw new Error('Image upload failed');
+            })
+            .catch(err => { console.error(err); alert('Error uploading image'); });
+    } else {
+        doUpdate(updateData);
+    }
+}
+
+function doUpdate(updateData) {
+    fetch('@Url.Action("UpdateVehicle", "Home")', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateData)
+    })
+    .then(r => r.json())
+    .then(d => {
+        if (d.success) {
+            alert('Vehicle updated successfully!');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('editVehicleModal'));
+            if (modal) modal.hide();
+            window.location.reload();
+        } else {
+            alert('Update failed: ' + (d.message || 'Unknown error'));
+        }
+    })
+    .catch(err => { console.error(err); alert('Error updating vehicle'); });
 }
 
 function editVehicleFromModal() {
