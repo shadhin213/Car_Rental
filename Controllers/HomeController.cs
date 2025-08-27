@@ -121,6 +121,81 @@ public class HomeController : Controller
         }
     }
 
+    // Fallback POST endpoint for environments that block HTTP DELETE from browsers
+    [HttpPost]
+    [Route("Home/DeleteVehicle")]
+    public async Task<IActionResult> DeleteVehiclePost([FromForm] int id)
+    {
+        return await DeleteVehicle(id);
+    }
+
+    [HttpPut]
+    [Route("Home/UpdateVehicle")]
+    public async Task<IActionResult> UpdateVehicle([FromBody] VehicleViewModel vehicleData)
+    {
+        try
+        {
+            if (_context == null)
+            {
+                return StatusCode(500, new { success = false, message = "Database context not available" });
+            }
+
+            var vehicle = await _context.Vehicles.FirstOrDefaultAsync(v => v.Id == vehicleData.Id);
+            if (vehicle == null)
+            {
+                return NotFound(new { success = false, message = "Vehicle not found" });
+            }
+
+            // Check if registration number already exists for other vehicles
+            var existingVehicle = await _context.Vehicles
+                .FirstOrDefaultAsync(v => v.RegistrationNumber == vehicleData.RegistrationNumber && v.Id != vehicleData.Id);
+            
+            if (existingVehicle != null)
+            {
+                return BadRequest(new { success = false, message = "Vehicle with this registration number already exists" });
+            }
+
+            // Check if chassis number already exists for other vehicles
+            existingVehicle = await _context.Vehicles
+                .FirstOrDefaultAsync(v => v.ChassisNumber == vehicleData.ChassisNumber && v.Id != vehicleData.Id);
+            
+            if (existingVehicle != null)
+            {
+                return BadRequest(new { success = false, message = "Vehicle with this chassis number already exists" });
+            }
+
+            // Update vehicle properties
+            vehicle.VehicleType = vehicleData.VehicleType;
+            vehicle.Model = vehicleData.Model;
+            vehicle.Year = vehicleData.Year;
+            vehicle.RegistrationNumber = vehicleData.RegistrationNumber;
+            vehicle.ChassisNumber = vehicleData.ChassisNumber;
+            vehicle.Color = vehicleData.Color;
+            vehicle.EngineCapacity = vehicleData.EngineCapacity;
+            vehicle.FuelType = vehicleData.FuelType;
+            vehicle.DailyRate = vehicleData.DailyRate;
+            vehicle.Seats = vehicleData.Seats;
+            vehicle.Status = vehicleData.Status;
+            vehicle.Description = vehicleData.Description;
+            vehicle.Features = string.Join(",", vehicleData.Features);
+
+            // Update image URL if provided
+            if (!string.IsNullOrEmpty(vehicleData.ImageUrl))
+            {
+                vehicle.ImageUrl = vehicleData.ImageUrl;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { success = true, message = "Vehicle updated successfully!" });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating vehicle {VehicleId}", vehicleData.Id);
+            return StatusCode(500, new { success = false, message = "Error updating vehicle: " + ex.Message });
+        }
+    }
+
     public IActionResult Dashboard()
     {
         var userId = HttpContext.Session.GetString("UserId");
@@ -145,9 +220,10 @@ public class HomeController : Controller
                 return View();
             }
 
+            // Show ALL vehicles regardless of status, but order by status (Available first) then by creation date
             var vehicles = await _context.Vehicles
-                .Where(v => v.Status == "Available")
-                .OrderByDescending(v => v.CreatedAt)
+                .OrderBy(v => v.Status != "Available" ? 1 : 0) // Available vehicles first
+                .ThenByDescending(v => v.CreatedAt)
                 .ToListAsync();
 
             var vehicleViewModels = vehicles.Select(v => new VehicleViewModel
@@ -175,7 +251,7 @@ public class HomeController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error retrieving available vehicles");
+            _logger.LogError(ex, "Error retrieving vehicles");
             ViewBag.Vehicles = new List<VehicleViewModel>();
             return View();
         }
@@ -246,7 +322,7 @@ public class HomeController : Controller
             _context.Vehicles.Add(vehicle);
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true, message = "Vehicle added successfully!", vehicleId = vehicle.Id });
+            return Json(new { success = true, message = "Vehicle added successfully!", vehicleId = vehicle.Id, redirectUrl = Url.Action("AvailableCars", "Home") });
         }
         catch (Exception ex)
         {

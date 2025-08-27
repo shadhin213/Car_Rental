@@ -29,7 +29,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">
+                        <a class="nav-link text-white" href="@Url.Action("AvailableCars", "Home")">
                             <i class="bi bi-car-front"></i> Available Cars
                         </a>
                     </li>
@@ -139,14 +139,14 @@
                                     </div>
                                 </div>
                                 <div class="col-12 col-sm-6 col-md-3 mb-3">
-                                    <div class="card border-left-danger h-100">
+                                    <div class="card border-left-success h-100">
                                         <div class="card-body text-center">
-                                            <i class="bi bi-trash fa-3x text-danger mb-3"></i>
-                                            <h5 class="card-title">Remove Car</h5>
-                                            <p class="card-text">Remove vehicles from the fleet permanently</p>
-                                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#removeCarModal">
-                                                <i class="bi bi-trash"></i> Remove Car
-                                            </button>
+                                            <i class="bi bi-list-ul fa-3x text-success mb-3"></i>
+                                            <h5 class="card-title">View All Vehicles</h5>
+                                            <p class="card-text">Browse and manage the complete vehicle fleet</p>
+                                            <a class="btn btn-success" href="@Url.Action("ViewAllVehicles", "Home")" target="_blank">
+                                                <i class="bi bi-list-ul"></i> View All Vehicles
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -185,7 +185,7 @@
                 <form id="addCarForm">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehicleType" class="form-label">Vehicle Type *</label>
+                            <label for="vehicleType" class="form-label">Vehicle Type</label>
                             <select class="form-select" id="vehicleType" name="vehicleType" required>
                                 <option value="">Select Vehicle Type</option>
                                 <option value="motor-bike">Motor Bike</option>
@@ -197,37 +197,37 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="model" class="form-label">Model *</label>
+                            <label for="model" class="form-label">Model</label>
                             <input type="text" class="form-control" id="model" name="model" placeholder="e.g., Camry, Civic" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="year" class="form-label">Year *</label>
+                            <label for="year" class="form-label">Year</label>
                             <input type="number" class="form-control" id="year" name="year" min="2000" max="2025" placeholder="2024" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="registrationNumber" class="form-label">Registration Number *</label>
+                            <label for="registrationNumber" class="form-label">Registration Number</label>
                             <input type="text" class="form-control" id="registrationNumber" name="registrationNumber" placeholder="e.g., ABC-123" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="chassisNumber" class="form-label">Chassis Number *</label>
+                            <label for="chassisNumber" class="form-label">Chassis Number</label>
                             <input type="text" class="form-control" id="chassisNumber" name="chassisNumber" placeholder="e.g., 1HGBH41JXMN109186" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="color" class="form-label">Color *</label>
+                            <label for="color" class="form-label">Color</label>
                             <input type="text" class="form-control" id="color" name="color" placeholder="e.g., Red, Blue" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="engineCapacity" class="form-label">Engine Capacity (CC) *</label>
+                            <label for="engineCapacity" class="form-label">Engine Capacity (CC)</label>
                             <input type="text" class="form-control" id="engineCapacity" name="engineCapacity" placeholder="e.g., 100cc, 2400cc" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="fuelType" class="form-label">Fuel Type *</label>
+                            <label for="fuelType" class="form-label">Fuel Type</label>
                             <select class="form-select" id="fuelType" name="fuelType" required>
                                 <option value="">Select Fuel Type</option>
                                 <option value="petrol">Petrol</option>
@@ -240,19 +240,27 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="dailyRate" class="form-label">Daily Rate ($) *</label>
-                            <input type="number" class="form-control" id="dailyRate" name="dailyRate" min="10" step="0.01" placeholder="50.00" required>
+                            <label for="dailyRate" class="form-label">Daily Rate ($)</label>
+                            <input type="number" class="form-control" id="dailyRate" name="dailyRate" min="10" step="1" placeholder="50.00" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="seats" class="form-label">Number of Seats</label>
-                            <input type="number" class="form-control" id="seats" name="seats" min="1" max="50" placeholder="5">
+                            <input type="number" class="form-control" id="seats" name="seats" min="1" max="50" placeholder="e.g., 5" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehicleImage" class="form-label">Upload Image *</label>
+                            <label for="status" class="form-label">Status</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="available">Available</option>
+                                <option value="rented">Rented</option>
+                                <option value="maintenance">Under Maintenance</option>
+                                <option value="out-of-service">Out of Service</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vehicleImage" class="form-label">Upload Image</label>
                             <input type="file" class="form-control" id="vehicleImage" name="vehicleImage" accept="image/*" required>
-                            <small class="form-text text-muted">Accepted formats: JPG, PNG, GIF (Max 5MB)</small>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -499,6 +507,139 @@
     </div>
 </div>
 
+<!-- Edit Car Modal -->
+<div class="modal fade" id="editCarModal" tabindex="-1" aria-labelledby="editCarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="editCarModalLabel">
+                    <i class="bi bi-pencil-square"></i> Edit Vehicle Information
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editCarForm">
+                    <input type="hidden" id="editVehicleId" name="id">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="editVehicleType" class="form-label">Vehicle Type *</label>
+                            <select class="form-select" id="editVehicleType" name="vehicleType" required>
+                                <option value="">Select Vehicle Type</option>
+                                <option value="motor-bike">Motor Bike</option>
+                                <option value="cng">CNG</option>
+                                <option value="private-car">Private Car</option>
+                                <option value="pickup">Pickup</option>
+                                <option value="truck">Truck</option>
+                                <option value="covered-van">Covered Van</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editModel" class="form-label">Model *</label>
+                            <input type="text" class="form-control" id="editModel" name="model" placeholder="e.g., Camry, Civic" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="editYear" class="form-label">Year *</label>
+                            <input type="number" class="form-control" id="editYear" name="year" min="2000" max="2025" placeholder="2024" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editRegistrationNumber" class="form-label">Registration Number *</label>
+                            <input type="text" class="form-control" id="editRegistrationNumber" name="registrationNumber" placeholder="e.g., ABC-123" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="editChassisNumber" class="form-label">Chassis Number *</label>
+                            <input type="text" class="form-control" id="editChassisNumber" name="chassisNumber" placeholder="e.g., 1HGBH41JXMN109186" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editColor" class="form-label">Color *</label>
+                            <input type="text" class="form-control" id="editColor" name="color" placeholder="e.g., Red, Blue" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="editEngineCapacity" class="form-label">Engine Capacity (CC) *</label>
+                            <input type="text" class="form-control" id="editEngineCapacity" name="engineCapacity" placeholder="e.g., 100cc, 2400cc" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editFuelType" class="form-label">Fuel Type *</label>
+                            <select class="form-select" id="editFuelType" name="fuelType" required>
+                                <option value="">Select Fuel Type</option>
+                                <option value="petrol">Petrol</option>
+                                <option value="diesel">Diesel</option>
+                                <option value="electric">Electric</option>
+                                <option value="hybrid">Hybrid</option>
+                                <option value="cng">CNG</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="editDailyRate" class="form-label">Daily Rate ($) *</label>
+                            <input type="number" class="form-control" id="editDailyRate" name="dailyRate" min="10" step="0.01" placeholder="50.00" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editSeats" class="form-label">Number of Seats</label>
+                            <input type="number" class="form-control" id="editSeats" name="seats" min="1" max="50" placeholder="5">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="editStatus" class="form-label">Status *</label>
+                            <select class="form-select" id="editStatus" name="status" required>
+                                <option value="available">Available</option>
+                                <option value="rented">Rented</option>
+                                <option value="maintenance">Under Maintenance</option>
+                                <option value="out-of-service">Out of Service</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editVehicleImage" class="form-label">Update Image</label>
+                            <input type="file" class="form-control" id="editVehicleImage" name="vehicleImage" accept="image/*">
+                            <small class="form-text text-muted">Leave empty to keep current image</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="editDescription" name="description" rows="3" placeholder="Additional details about the vehicle..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFeatures" class="form-label">Features</label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="editAc" name="features" value="ac">
+                                    <label class="form-check-label" for="editAc">Air Conditioning</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="editGps" name="features" value="gps">
+                                    <label class="form-check-label" for="editGps">GPS Navigation</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="editBluetooth" name="features" value="bluetooth">
+                                    <label class="form-check-label" for="editBluetooth">Bluetooth</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning" onclick="submitEditCar()">
+                    <i class="bi bi-pencil-square"></i> Update Vehicle
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Confirm Add Vehicle Modal -->
 <div class="modal fade" id="confirmAddModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -529,6 +670,7 @@
                                 <tr><th>Fuel</th><td id="pv_fuel"></td></tr>
                                 <tr><th>Seats</th><td id="pv_seats"></td></tr>
                                 <tr><th>Rate</th><td id="pv_rate"></td></tr>
+                                <tr><th>Status</th><td id="pv_status"></td></tr>
                                 <tr><th>Description</th><td id="pv_desc"></td></tr>
                                 <tr><th>Features</th><td id="pv_features"></td></tr>
                             </tbody>
@@ -579,7 +721,8 @@ function submitAddCar() {
             engineCapacity: carData.engineCapacity,
             fuelType: carData.fuelType,
             dailyRate: parseFloat(carData.dailyRate),
-            seats: parseInt(carData.seats) || 0,
+            seats: parseInt(carData.seats),
+            status: carData.status, // Add status to staged data
             imageUrl: '',
             description: carData.description || '',
             features: features
@@ -596,6 +739,7 @@ function submitAddCar() {
         document.getElementById('pv_fuel').innerText = pendingVehicleData.fuelType;
         document.getElementById('pv_seats').innerText = pendingVehicleData.seats || '';
         document.getElementById('pv_rate').innerText = pendingVehicleData.dailyRate ? `$${pendingVehicleData.dailyRate}/day` : '';
+        document.getElementById('pv_status').innerText = pendingVehicleData.status;
         document.getElementById('pv_desc').innerText = pendingVehicleData.description;
         document.getElementById('pv_features').innerText = pendingVehicleData.features.join(', ');
 
@@ -645,7 +789,6 @@ function confirmSubmitAddCar() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Car added successfully!');
                 // Close both modals
                 const addModal = bootstrap.Modal.getInstance(document.getElementById('addCarModal'));
                 if (addModal) addModal.hide();
@@ -659,8 +802,12 @@ function confirmSubmitAddCar() {
                 const form = document.getElementById('addCarForm');
                 form.reset();
 
-                // Open all vehicles
-                window.open('@Url.Action("ViewAllVehicles", "Home")', '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+                // Redirect to Available Cars page to show the newly added car
+                if (data.redirectUrl) {
+                    window.location.href = data.redirectUrl;
+                } else {
+                    window.location.href = '@Url.Action("AvailableCars", "Home")';
+                }
             } else {
                 alert('Error: ' + data.message);
             }
@@ -700,11 +847,19 @@ function submitRemoveCar() {
         }
         const vehicleId = carData.carId;
         if (!vehicleId) { alert('Please select a car.'); return; }
+        // Try DELETE; if it fails, fallback to POST form endpoint
         fetch('@Url.Action("DeleteVehicle", "Home")/' + vehicleId, {
             method: 'DELETE',
             headers: { 'Accept': 'application/json' }
         })
-        .then(res => res.json())
+        .then(async res => {
+            if (res.ok) return res.json();
+            // fallback
+            const fd = new FormData();
+            fd.append('id', vehicleId);
+            const resp = await fetch('@Url.Action("DeleteVehiclePost", "Home")', { method: 'POST', body: fd });
+            return resp.json();
+        })
         .then(data => {
             if (data && data.success) {
                 alert('Car removed successfully!');
@@ -782,13 +937,125 @@ function editCar(carId) {
     
     // Open update modal with car data
     setTimeout(() => {
-        const updateModal = new bootstrap.Modal(document.getElementById('updateCarModal'));
+        const updateModal = new bootstrap.Modal(document.getElementById('editCarModal'));
         updateModal.show();
         
         // Populate form with car data (this would come from database)
-        document.getElementById('updateCarId').value = carId;
-        // Populate other fields...
+        document.getElementById('editVehicleId').value = carId;
+        const carToEdit = fleetVehicles.find(v => v.id === carId);
+        if (carToEdit) {
+            document.getElementById('editVehicleType').value = carToEdit.vehicleType;
+            document.getElementById('editModel').value = carToEdit.model;
+            document.getElementById('editYear').value = carToEdit.year;
+            document.getElementById('editRegistrationNumber').value = carToEdit.registrationNumber;
+            document.getElementById('editChassisNumber').value = carToEdit.chassisNumber;
+            document.getElementById('editColor').value = carToEdit.color;
+            document.getElementById('editEngineCapacity').value = carToEdit.engineCapacity;
+            document.getElementById('editFuelType').value = carToEdit.fuelType;
+            document.getElementById('editDailyRate').value = carToEdit.dailyRate;
+            document.getElementById('editSeats').value = carToEdit.seats || '';
+            document.getElementById('editStatus').value = carToEdit.status;
+            document.getElementById('editDescription').value = carToEdit.description || '';
+
+            // Populate features
+            document.getElementById('editAc').checked = carToEdit.features.includes('ac');
+            document.getElementById('editGps').checked = carToEdit.features.includes('gps');
+            document.getElementById('editBluetooth').checked = carToEdit.features.includes('bluetooth');
+        }
     }, 500);
+}
+
+// Submit Edit Car Function
+function submitEditCar() {
+    const form = document.getElementById('editCarForm');
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+    
+    const formData = new FormData(form);
+    const vehicleData = Object.fromEntries(formData);
+    
+    // Collect features
+    const features = [];
+    const featureCheckboxes = form.querySelectorAll('input[name="features"]:checked');
+    featureCheckboxes.forEach(checkbox => {
+        features.push(checkbox.value);
+    });
+    
+    const updateData = {
+        id: parseInt(vehicleData.id),
+        vehicleType: vehicleData.vehicleType,
+        model: vehicleData.model,
+        year: parseInt(vehicleData.year),
+        registrationNumber: vehicleData.registrationNumber,
+        chassisNumber: vehicleData.chassisNumber,
+        color: vehicleData.color,
+        engineCapacity: vehicleData.engineCapacity,
+        fuelType: vehicleData.fuelType,
+        dailyRate: parseFloat(vehicleData.dailyRate),
+        seats: parseInt(vehicleData.seats) || 0,
+        status: vehicleData.status,
+        description: vehicleData.description || '',
+        features: features
+    };
+    
+    // Handle image upload if new image is selected
+    const imageFile = document.getElementById('editVehicleImage').files[0];
+    if (imageFile) {
+        const imgForm = new FormData();
+        imgForm.append('file', imageFile);
+        
+        fetch('@Url.Action("UploadVehicleImage", "Home")', { method: 'POST', body: imgForm })
+            .then(res => res.json())
+            .then(json => {
+                if (json.success) {
+                    updateData.imageUrl = json.url;
+                    submitUpdateRequest(updateData);
+                } else {
+                    throw new Error(json.message || 'Image upload failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error uploading image. Please try again.');
+            });
+    } else {
+        submitUpdateRequest(updateData);
+    }
+}
+
+function submitUpdateRequest(updateData) {
+    fetch('@Url.Action("UpdateVehicle", "Home")', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Vehicle updated successfully!');
+            
+            // Close edit modal
+            const editModal = bootstrap.Modal.getInstance(document.getElementById('editCarModal'));
+            if (editModal) editModal.hide();
+            
+            // Reset form
+            document.getElementById('editCarForm').reset();
+            
+            // Refresh fleet data
+            const event = new Event('show.bs.modal');
+            document.getElementById('viewAllCarsModal').dispatchEvent(event);
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error updating vehicle. Please try again.');
+    });
 }
 
 // Remove Car Function (from table)
@@ -798,7 +1065,14 @@ function removeCar(carId) {
         method: 'DELETE',
         headers: { 'Accept': 'application/json' }
     })
-    .then(res => res.json())
+    .then(async res => {
+        if (res.ok) return res.json();
+        // fallback to POST form
+        const fd = new FormData();
+        fd.append('id', carId);
+        const resp = await fetch('@Url.Action("DeleteVehiclePost", "Home")', { method: 'POST', body: fd });
+        return resp.json();
+    })
     .then(data => {
         if (data && data.success) {
             alert('Car removed successfully!');
@@ -887,6 +1161,13 @@ document.getElementById('updateCarId').addEventListener('change', function() {
     
     .text-gray-800 {
         color: #5a5c69 !important;
+    }
+
+    /* Red asterisk for required fields */
+    .form-label:after {
+        content: " *";
+        color: #dc3545;
+        font-weight: bold;
     }
 
     /* Responsive Design */

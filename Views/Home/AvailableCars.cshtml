@@ -6,13 +6,37 @@
     <div class="row">
         <div class="col-12">
             <div class="page-header bg-primary text-white p-4 rounded mb-4">
-                <h1 class="display-4">
-                    <i class="bi bi-car-front"></i> Available Cars
-                </h1>
-                <p class="lead">Browse our extensive collection of vehicles available for rent</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="display-4">
+                            <i class="bi bi-car-front"></i> Fleet Overview
+                        </h1>
+                        <p class="lead">Browse our complete fleet of vehicles with their current status</p>
+                    </div>
+                    <div>
+                        <a href="@Url.Action("FleetManagement", "Home")" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-truck"></i> Fleet Management
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Success Message -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    
 
     <!-- Filter Section -->
     <div class="row mb-4">
@@ -61,6 +85,16 @@
                                 <option value="diesel">Diesel</option>
                                 <option value="electric">Electric</option>
                                 <option value="hybrid">Hybrid</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label for="statusFilter" class="form-label">Status</label>
+                            <select class="form-select" id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="available">Available</option>
+                                <option value="rented">Rented</option>
+                                <option value="maintenance">Under Maintenance</option>
+                                <option value="out-of-service">Out of Service</option>
                             </select>
                         </div>
                     </div>
@@ -116,7 +150,13 @@
                                         break;
                                 }
                             }
-                            <span class="badge @(vehicle.Status == "Available" ? "bg-success" : "bg-warning") status-badge position-absolute top-0 end-0 m-2">
+                            <span class="badge @(vehicle.Status?.ToLower() switch { 
+                                "available" => "bg-success", 
+                                "rented" => "bg-warning", 
+                                "maintenance" => "bg-info", 
+                                "out-of-service" => "bg-danger",
+                                _ => "bg-secondary"
+                            }) status-badge position-absolute top-0 end-0 m-2">
                                 @vehicle.Status
                             </span>
                         </div>
@@ -145,9 +185,20 @@
                             </div>
                         </div>
                         <div class="card-footer bg-transparent">
-                            <button class="btn btn-primary w-100">
-                                <i class="bi bi-calendar-plus"></i> Rent Now
-                            </button>
+                            @if (vehicle.Status?.ToLower() == "available")
+                            {
+                                <button class="btn btn-primary w-100">
+                                    <i class="bi bi-calendar-plus"></i> Rent Now
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary w-100" disabled>
+                                    <i class="bi bi-clock"></i> @(vehicle.Status?.ToLower() == "rented" ? "Currently Rented" : 
+                                                                   vehicle.Status?.ToLower() == "maintenance" ? "Under Maintenance" : 
+                                                                   vehicle.Status?.ToLower() == "out-of-service" ? "Out of Service" : "Unavailable")
+                                </button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -183,6 +234,31 @@
     </div>
 </div>
 
+@section Styles {
+    <style>
+        .status-badge {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.5rem 0.75rem;
+        }
+        
+        .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+
+        
+        .vehicle-item[style*="none"] {
+            display: none !important;
+        }
+    </style>
+}
+
 @section Scripts {
     <script>
         // Add filter functionality
@@ -194,6 +270,7 @@
                 const vehicleType = document.getElementById('vehicleType').value;
                 const priceRange = document.getElementById('priceRange').value;
                 const fuelType = document.getElementById('fuelType').value;
+                const statusFilter = document.getElementById('statusFilter').value;
                 
                 vehicleItems.forEach(item => {
                     let show = true;
@@ -225,6 +302,14 @@
                     // Filter by fuel type
                     if (fuelType && item.dataset.fuel !== fuelType) {
                         show = false;
+                    }
+                    
+                    // Filter by status
+                    if (statusFilter) {
+                        const status = item.querySelector('.status-badge').textContent.trim().toLowerCase();
+                        if (status !== statusFilter.toLowerCase()) {
+                            show = false;
+                        }
                     }
                     
                     // Show/hide item
