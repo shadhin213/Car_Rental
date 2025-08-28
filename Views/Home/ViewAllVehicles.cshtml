@@ -118,29 +118,35 @@
     </div>
 
     <!-- Statistics Cards -->
-    <div class="row mb-4">
-        <div class="col-md-3">
+    <div class="row mb-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3">
+        <div class="col">
             <div class="stats-card text-center">
                 <h3 class="mb-0">@vehicles.Count</h3>
                 <p class="mb-0">Total Vehicles</p>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col">
             <div class="stats-card text-center" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
-                <h3 class="mb-0">@vehicles.Count(v => v.Status == "Available")</h3>
+                <h3 class="mb-0">@vehicles.Count(v => (v.Status ?? string.Empty).Equals("Available", System.StringComparison.OrdinalIgnoreCase))</h3>
                 <p class="mb-0">Available</p>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col">
             <div class="stats-card text-center" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                <h3 class="mb-0">@vehicles.Count(v => v.Status == "Rented")</h3>
+                <h3 class="mb-0">@vehicles.Count(v => (v.Status ?? string.Empty).Equals("Rented", System.StringComparison.OrdinalIgnoreCase))</h3>
                 <p class="mb-0">Rented</p>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col">
             <div class="stats-card text-center" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                <h3 class="mb-0">@vehicles.Count(v => v.Status == "Maintenance")</h3>
+                <h3 class="mb-0">@vehicles.Count(v => (v.Status ?? string.Empty).Equals("Maintenance", System.StringComparison.OrdinalIgnoreCase))</h3>
                 <p class="mb-0">Maintenance</p>
+            </div>
+        </div>
+        <div class="col">
+            <div class="stats-card text-center" style="background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);">
+                <h3 class="mb-0">@vehicles.Count(v => ((v.Status ?? string.Empty).Replace("-", " ")).Equals("Out of Service", System.StringComparison.OrdinalIgnoreCase))</h3>
+                <p class="mb-0">Out of Service</p>
             </div>
         </div>
     </div>
@@ -658,6 +664,15 @@ function submitEditVehicleFromVAV() {
     const fd = new FormData(form);
     const payload = Object.fromEntries(fd);
 
+    // Normalize status to display values used across the app
+    const statusMap = {
+        'available': 'Available',
+        'rented': 'Rented',
+        'maintenance': 'Maintenance',
+        'out-of-service': 'Out of Service'
+    };
+    const normalizedStatus = statusMap[(payload.status || '').toLowerCase()] || payload.status;
+
     // map types
     const updateData = {
         id: parseInt(payload.id),
@@ -671,7 +686,7 @@ function submitEditVehicleFromVAV() {
         fuelType: payload.fuelType,
         dailyRate: parseFloat(payload.dailyRate),
         seats: parseInt(payload.seats || '0'),
-        status: payload.status,
+        status: normalizedStatus,
         description: payload.description || '',
         features: []
     };
