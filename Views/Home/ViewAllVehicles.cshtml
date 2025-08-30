@@ -9,7 +9,7 @@
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         border: 1px solid #e0e0e0;
         border-radius: 10px;
-        overflow: hidden;
+        overflow: visible;
     }
     
     .vehicle-card:hover {
@@ -32,6 +32,43 @@
     
     .vehicle-details {
         padding: 1.5rem;
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+    }
+    
+    .vehicle-details .card-title {
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+    
+    .vehicle-details .text-muted {
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Force all vehicle card content to be visible */
+    .vehicle-card * {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    .vehicle-card .card-title,
+    .vehicle-card .text-muted,
+    .vehicle-card .row,
+    .vehicle-card .col-6,
+    .vehicle-card .feature-tag,
+    .vehicle-card .btn {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+    }
+    
+    .vehicle-card small,
+    .vehicle-card strong {
+        opacity: 1 !important;
+        visibility: visible !important;
     }
     
     .feature-tag {
@@ -90,6 +127,86 @@
     
     .grid-view.active {
         display: block;
+    }
+    
+    /* Ensure vehicle information is always visible */
+    .vehicle-card .card-title,
+    .vehicle-card .text-muted,
+    .vehicle-card .row,
+    .vehicle-card .feature-tag,
+    .vehicle-card .btn {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+    }
+    
+    .vehicle-card .col-6 {
+        display: block !important;
+    }
+    
+    .vehicle-card small {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    .vehicle-card strong {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+
+    
+    /* Button animation */
+    .btn {
+        transition: all 0.2s ease-in-out;
+    }
+    
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+    
+    /* Enhanced Vehicle Details Modal Styling */
+    .vehicle-info-section {
+        padding: 1rem 0;
+    }
+    
+    .info-card {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 1rem;
+        height: 100%;
+        transition: all 0.2s ease-in-out;
+    }
+    
+    .info-card:hover {
+        background: #e9ecef;
+        border-color: #dee2e6;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .info-card.highlight {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border-color: #2196f3;
+    }
+    
+    .info-card.highlight:hover {
+        background: linear-gradient(135deg, #bbdefb 0%, #90caf9 100%);
+    }
+    
+    .modal-body {
+        padding: 2rem;
+    }
+    
+    .modal-body img {
+        border: 3px solid #f8f9fa;
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .modal-body img:hover {
+        border-color: #007bff;
+        transform: scale(1.02);
     }
 </style>
 
@@ -228,45 +345,11 @@
                                 <h5 class="card-title mb-2">@vehicle.Model</h5>
                                 <p class="text-muted mb-2">@vehicle.VehicleType • @vehicle.Year</p>
                                 
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <small class="text-muted">Registration</small><br>
-                                        <strong>@vehicle.RegistrationNumber</strong>
-                                    </div>
-                                    <div class="col-6">
-                                        <small class="text-muted">Daily Rate</small><br>
-                                        <strong class="text-success">$@vehicle.DailyRate</strong>
-                                    </div>
-                                </div>
-                                
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <small class="text-muted">Color</small><br>
-                                        <strong>@vehicle.Color</strong>
-                                    </div>
-                                    <div class="col-6">
-                                        <small class="text-muted">Engine</small><br>
-                                        <strong>@vehicle.EngineCapacity</strong>
-                                    </div>
-                                </div>
-                                
-                                @if (vehicle.Features.Any())
-                                {
-                                    <div class="mb-3">
-                                        @foreach (var feature in vehicle.Features.Take(3))
-                                        {
-                                            <span class="feature-tag">@feature</span>
-                                        }
-                                        @if (vehicle.Features.Count > 3)
-                                        {
-                                            <span class="feature-tag">+@(vehicle.Features.Count - 3) more</span>
-                                        }
-                                    </div>
-                                }
+
                                 
                                 <div class="d-flex gap-2">
                                     <button class="btn btn-outline-primary btn-sm flex-fill" onclick="viewVehicleDetails(@vehicle.Id)">
-                                        <i class="bi bi-eye"></i> View
+                                        <i class="bi bi-eye"></i> View Details
                                     </button>
                                     <button class="btn btn-outline-warning btn-sm" onclick="openEditVehicleModal(@vehicle.Id)">
                                         <i class="bi bi-pencil"></i>
@@ -512,6 +595,9 @@ function switchView(view) {
         gridView.classList.remove('active');
         tableView.classList.add('active');
     }
+    
+    // Ensure vehicle info is visible after view switch
+    setTimeout(ensureVehicleInfoVisible, 100);
 }
 
 function applyFilters() {
@@ -548,75 +634,105 @@ function viewVehicleDetails(vehicleId) {
     if (vehicle) {
         const content = `
             <div class="row">
-                <div class="col-md-6">
-                    <img src="${vehicle.imageUrl || '/images/default-vehicle.jpg'}" 
-                         class="img-fluid rounded" 
-                         alt="${vehicle.model}"
-                         onerror="this.src='/images/default-vehicle.jpg'">
+                <div class="col-md-5">
+                    <div class="text-center mb-3">
+                        <img src="${vehicle.imageUrl || '/images/default-vehicle.jpg'}" 
+                             class="img-fluid rounded shadow" 
+                             style="max-height: 300px; object-fit: cover;"
+                             alt="${vehicle.model}"
+                             onerror="this.src='/images/default-vehicle.jpg'">
+                    </div>
+                    <div class="text-center">
+                        <span class="badge fs-6 ${vehicle.status === 'Available' ? 'bg-success' : vehicle.status === 'Rented' ? 'bg-warning' : 'bg-danger'}">
+                            ${vehicle.status}
+                        </span>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <h4>${vehicle.model}</h4>
-                    <p class="text-muted">${vehicle.vehicleType} • ${vehicle.year}</p>
-                    
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <strong>Registration:</strong><br>
-                            ${vehicle.registrationNumber}
+                <div class="col-md-7">
+                    <div class="vehicle-info-section">
+                        <h3 class="text-primary mb-3">${vehicle.model}</h3>
+                        <p class="text-muted fs-5 mb-4">${vehicle.vehicleType} • ${vehicle.year}</p>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-6">
+                                <div class="info-card">
+                                    <small class="text-muted d-block">Registration Number</small>
+                                    <strong class="fs-6">${vehicle.registrationNumber}</strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="info-card">
+                                    <small class="text-muted d-block">Chassis Number</small>
+                                    <strong class="fs-6">${vehicle.chassisNumber}</strong>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <strong>Chassis:</strong><br>
-                            ${vehicle.chassisNumber}
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-6">
+                                <div class="info-card">
+                                    <small class="text-muted d-block">Color</small>
+                                    <strong class="fs-6">${vehicle.color}</strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="info-card">
+                                    <small class="text-muted d-block">Engine Capacity</small>
+                                    <strong class="fs-6">${vehicle.engineCapacity}</strong>
+                                </div>
+                            </div>
                         </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-6">
+                                <div class="info-card">
+                                    <small class="text-muted d-block">Fuel Type</small>
+                                    <strong class="fs-6">${vehicle.fuelType}</strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="info-card">
+                                    <small class="text-muted d-block">Number of Seats</small>
+                                    <strong class="fs-6">${vehicle.seats || 'N/A'}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-6">
+                                <div class="info-card highlight">
+                                    <small class="text-muted d-block">Daily Rate</small>
+                                    <strong class="fs-4 text-success">$${vehicle.dailyRate}</strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="info-card">
+                                    <small class="text-muted d-block">Vehicle ID</small>
+                                    <strong class="fs-6">#${vehicle.id}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        ${vehicle.description ? `
+                        <div class="mb-4">
+                            <div class="info-card">
+                                <small class="text-muted d-block">Description</small>
+                                <p class="mb-0 mt-2">${vehicle.description}</p>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        ${vehicle.features && vehicle.features.length > 0 ? `
+                        <div class="mb-4">
+                            <div class="info-card">
+                                <small class="text-muted d-block mb-2">Features</small>
+                                <div class="d-flex flex-wrap gap-2">
+                                    ${vehicle.features.map(feature => `<span class="badge bg-primary">${feature}</span>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
                     </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <strong>Color:</strong><br>
-                            ${vehicle.color}
-                        </div>
-                        <div class="col-6">
-                            <strong>Engine:</strong><br>
-                            ${vehicle.engineCapacity}
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <strong>Fuel Type:</strong><br>
-                            ${vehicle.fuelType}
-                        </div>
-                        <div class="col-6">
-                            <strong>Seats:</strong><br>
-                            ${vehicle.seats}
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <strong>Daily Rate:</strong><br>
-                            <span class="text-success fw-bold">$${vehicle.dailyRate}</span>
-                        </div>
-                        <div class="col-6">
-                            <strong>Status:</strong><br>
-                            <span class="badge ${vehicle.status === 'Available' ? 'bg-success' : vehicle.status === 'Rented' ? 'bg-warning' : 'bg-danger'}">
-                                ${vehicle.status}
-                            </span>
-                        </div>
-                    </div>
-                    
-                    ${vehicle.description ? `
-                    <div class="mb-3">
-                        <strong>Description:</strong><br>
-                        ${vehicle.description}
-                    </div>
-                    ` : ''}
-                    
-                    ${vehicle.features && vehicle.features.length > 0 ? `
-                    <div class="mb-3">
-                        <strong>Features:</strong><br>
-                        ${vehicle.features.map(feature => `<span class="badge bg-light text-dark me-1">${feature}</span>`).join('')}
-                    </div>
-                    ` : ''}
                 </div>
             </div>
         `;
@@ -770,4 +886,31 @@ function exportVehicles() {
 document.getElementById('filterType').addEventListener('change', applyFilters);
 document.getElementById('filterStatus').addEventListener('change', applyFilters);
 document.getElementById('filterModel').addEventListener('input', applyFilters);
+
+// Function to ensure vehicle information is always visible
+function ensureVehicleInfoVisible() {
+    const vehicleCards = document.querySelectorAll('.vehicle-card');
+    vehicleCards.forEach(card => {
+        const elements = card.querySelectorAll('*');
+        elements.forEach(el => {
+            el.style.opacity = '1';
+            el.style.visibility = 'visible';
+            el.style.display = el.tagName === 'DIV' || el.tagName === 'P' || el.tagName === 'H5' || el.tagName === 'SMALL' || el.tagName === 'STRONG' ? 'block' : 'inline';
+        });
+    });
+}
+
+
+
+// Call this function when page loads and after any DOM changes
+document.addEventListener('DOMContentLoaded', function() {
+    ensureVehicleInfoVisible();
+    // Also ensure visibility after a short delay
+    setTimeout(ensureVehicleInfoVisible, 100);
+    setTimeout(ensureVehicleInfoVisible, 500);
+    
+    // Set up periodic checks to ensure vehicle info stays visible
+    setInterval(ensureVehicleInfoVisible, 2000);
+});
+
 </script>
