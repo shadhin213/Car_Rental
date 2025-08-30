@@ -6,15 +6,44 @@
 
 <style>
     .vehicle-card {
-        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        border: 1px solid #e0e0e0;
-        border-radius: 10px;
-        overflow: visible;
+        transition: box-shadow 0.3s ease, transform 0.3s ease !important;
+        border: 1px solid #e0e0e0 !important;
+        border-radius: 10px !important;
+        overflow: visible !important;
+        transform: translateY(0) !important;
+        cursor: default !important;
+        position: relative !important;
     }
     
     .vehicle-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        transform: translateY(-2px) !important;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    /* Override global site.css vehicle-card hover effects */
+    .vehicle-card::before {
+        display: none !important;
+    }
+    
+    .vehicle-card:hover::before {
+        display: none !important;
+    }
+    
+    .vehicle-card .card-body {
+        padding: 1.5rem !important;
+        background: transparent !important;
+    }
+    
+    .vehicle-card:hover .card-body {
+        background: transparent !important;
+    }
+    
+    .vehicle-card i {
+        transform: none !important;
+    }
+    
+    .vehicle-card:hover i {
+        transform: none !important;
     }
     
     .vehicle-image {
@@ -162,7 +191,8 @@
     }
     
     .btn:hover {
-        transform: translateY(-1px);
+        /* Removed transform to prevent shaking with vehicle cards */
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
     
     /* Enhanced Vehicle Details Modal Styling */
@@ -207,6 +237,37 @@
     .modal-body img:hover {
         border-color: #007bff;
         transform: scale(1.02);
+    }
+
+    /* Additional fixes for smooth operation */
+    .modal {
+        transition: none !important;
+    }
+    
+    .modal-dialog {
+        transition: none !important;
+    }
+    
+    .modal-content {
+        transition: none !important;
+    }
+    
+    /* Ensure smooth button interactions */
+    .btn:active {
+        transform: none !important;
+    }
+    
+    .btn:focus {
+        transform: none !important;
+    }
+    
+    /* Prevent any remaining shaking from other elements */
+    .vehicle-card * {
+        transition: none !important;
+    }
+    
+    .vehicle-card:hover * {
+        transition: none !important;
     }
 </style>
 
@@ -625,11 +686,14 @@ function applyFilters() {
 }
 
 function viewVehicleDetails(vehicleId) {
+    console.log('viewVehicleDetails called with ID:', vehicleId);
     currentVehicleId = vehicleId;
     
     // Find vehicle data from the current page
     const vehicles = @Html.Raw(Json.Serialize(vehicles));
+    console.log('Available vehicles:', vehicles);
     const vehicle = vehicles.find(v => v.id === vehicleId);
+    console.log('Found vehicle:', vehicle);
     
     if (vehicle) {
         const content = `
@@ -737,9 +801,21 @@ function viewVehicleDetails(vehicleId) {
             </div>
         `;
         
+        console.log('Setting modal content...');
         document.getElementById('vehicleDetailsContent').innerHTML = content;
-        const modal = new bootstrap.Modal(document.getElementById('vehicleDetailsModal'));
-        modal.show();
+        
+        console.log('Showing modal...');
+        const modalElement = document.getElementById('vehicleDetailsModal');
+        if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+            console.log('Modal should be visible now');
+        } else {
+            console.error('Modal element not found!');
+        }
+    } else {
+        console.error('Vehicle not found with ID:', vehicleId);
+        alert('Vehicle not found!');
     }
 }
 
@@ -847,8 +923,13 @@ function doUpdate(updateData) {
 }
 
 function editVehicleFromModal() {
+    console.log('editVehicleFromModal called, currentVehicleId:', currentVehicleId);
     if (currentVehicleId) {
-        editVehicle(currentVehicleId);
+        console.log('Opening edit modal for vehicle ID:', currentVehicleId);
+        openEditVehicleModal(currentVehicleId);
+    } else {
+        console.error('No currentVehicleId set!');
+        alert('Please view vehicle details first before editing.');
     }
 }
 
