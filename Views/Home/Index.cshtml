@@ -26,6 +26,53 @@
         width: 100%;
         border-radius: 8px 8px 0 0;
     }
+    
+    /* Filter indicator styling */
+    .filter-indicator {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 25px;
+        padding: 0.75rem 1.5rem;
+        color: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .filter-indicator .btn-outline-light {
+        border-radius: 20px;
+        border: 2px solid white;
+        transition: all 0.3s ease;
+    }
+    
+    .filter-indicator .btn-outline-light:hover {
+        background: white;
+        color: #667eea;
+        transform: translateY(-2px);
+    }
+    
+    /* Vehicle type specific styling */
+    .vehicle-type-motor-bike .vehicle-card {
+        border-left: 4px solid #6f42c1;
+    }
+    
+    .vehicle-type-cng .vehicle-card {
+        border-left: 4px solid #28a745;
+    }
+    
+    .vehicle-type-private-car .vehicle-card {
+        border-left: 4px solid #007bff;
+    }
+    
+    .vehicle-type-pickup .vehicle-card {
+        border-left: 4px solid #ffc107;
+    }
+    
+    .vehicle-type-truck .vehicle-card {
+        border-left: 4px solid #fd7e14;
+    }
+    
+    .vehicle-type-covered-van .vehicle-card {
+        border-left: 4px solid #dc3545;
+    }
 </style>
 
 <!-- Hero Slider Section -->
@@ -146,50 +193,55 @@
     </button>
 </div>
 
-
-    
-<!-- Features Section -->
-<div id="features" class="container mb-5">
-    <h2 class="text-center mb-5">
-        <i class="bi bi-star text-warning"></i> Why Choose Us
-    </h2>
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card text-center h-100 shadow-sm feature-card">
-                <div class="card-body">
-                    <i class="bi bi-car-front fa-3x text-primary mb-3"></i>
-                    <h5 class="card-title">Wide Vehicle Selection</h5>
-                    <p class="card-text">Choose from motorcycles, cars, buses, trucks, and more to suit your specific needs.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-center h-100 shadow-sm feature-card">
-                <div class="card-body">
-                    <i class="bi bi-shield-check fa-3x text-success mb-3"></i>
-                    <h5 class="card-title">Secure Booking</h5>
-                    <p class="card-text">Safe and secure booking process with instant confirmation and transparent pricing.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-center h-100 shadow-sm feature-card">
-                <div class="card-body">
-                    <i class="bi bi-headset fa-3x text-info mb-3"></i>
-                    <h5 class="card-title">24/7 Support</h5>
-                    <p class="card-text">Round-the-clock customer support for all your rental needs and emergencies.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Featured Vehicles Section -->
 <div class="container mb-5">
+    @if (!string.IsNullOrEmpty(ViewBag.SelectedVehicleType))
+    {
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb justify-content-center">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="text-decoration-none">
+                        <i class="bi bi-house"></i> Home
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="#" class="text-decoration-none">
+                        <i class="bi bi-truck"></i> Vehicle Types
+                    </a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <i class="bi bi-funnel"></i> @ViewBag.SelectedVehicleType
+                </li>
+            </ol>
+        </nav>
+    }
+    
     <h2 class="text-center mb-5">
-        <i class="bi bi-car-front text-primary"></i> Featured Vehicles
+        <i class="bi bi-car-front text-primary"></i> 
+        @if (!string.IsNullOrEmpty(ViewBag.SelectedVehicleType))
+        {
+            <span>@ViewBag.SelectedVehicleType.ToUpper() Vehicles</span>
+        }
+        else
+        {
+            <span>Featured Vehicles</span>
+        }
     </h2>
-    <div class="row g-4">
+    
+    @if (!string.IsNullOrEmpty(ViewBag.SelectedVehicleType))
+    {
+        <div class="text-center mb-4">
+            <div class="alert filter-indicator d-inline-block">
+                <i class="bi bi-funnel"></i> 
+                Showing vehicles filtered by: <strong>@ViewBag.SelectedVehicleType</strong>
+                <a href="@Url.Action("Index", "Home")" class="btn btn-sm btn-outline-light ms-3">
+                    <i class="bi bi-x-circle"></i> Clear Filter
+                </a>
+            </div>
+        </div>
+    }
+    
+    <div class="row g-4 @if (!string.IsNullOrEmpty(ViewBag.SelectedVehicleType)) { <text>vehicle-type-@ViewBag.SelectedVehicleType.ToLower().Replace(" ", "-")</text> }">
         @{
             var featuredVehicles = ViewBag.FeaturedVehicles as List<CarRentalManagementSystem.Models.VehicleViewModel> ?? new List<CarRentalManagementSystem.Models.VehicleViewModel>();
         }
@@ -259,7 +311,15 @@
         {
             <div class="col-12 text-center">
                 <div class="alert alert-info">
-                    <i class="bi bi-info-circle"></i> No vehicles available at the moment. Please check back later.
+                    <i class="bi bi-info-circle"></i> 
+                    @if (!string.IsNullOrEmpty(ViewBag.SelectedVehicleType))
+                    {
+                        <span>No @ViewBag.SelectedVehicleType vehicles available at the moment. Please check back later or try a different vehicle type.</span>
+                    }
+                    else
+                    {
+                        <span>No vehicles available at the moment. Please check back later.</span>
+                    }
                 </div>
             </div>
         }
@@ -269,10 +329,54 @@
     {
         <div class="text-center mt-4">
             <a href="@Url.Action("AvailableCars", "Home")" class="btn btn-outline-primary btn-lg">
-                <i class="bi bi-car-front"></i> View All Vehicles
+                <i class="bi bi-car-front"></i> 
+                @if (!string.IsNullOrEmpty(ViewBag.SelectedVehicleType))
+                {
+                    <span>View All @ViewBag.SelectedVehicleType Vehicles</span>
+                }
+                else
+                {
+                    <span>View All Vehicles</span>
+                }
             </a>
         </div>
     }
+</div>
+
+<!-- Features Section -->
+<div id="features" class="container mb-5">
+    <h2 class="text-center mb-5">
+        <i class="bi bi-star text-warning"></i> Why Choose Us
+    </h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm feature-card">
+                <div class="card-body">
+                    <i class="bi bi-car-front fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Wide Vehicle Selection</h5>
+                    <p class="card-text">Choose from motorcycles, cars, buses, trucks, and more to suit your specific needs.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm feature-card">
+                <div class="card-body">
+                    <i class="bi bi-shield-check fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Secure Booking</h5>
+                    <p class="card-text">Safe and secure booking process with instant confirmation and transparent pricing.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm feature-card">
+                <div class="card-body">
+                    <i class="bi bi-headset fa-3x text-info mb-3"></i>
+                    <h5 class="card-title">24/7 Support</h5>
+                    <p class="card-text">Round-the-clock customer support for all your rental needs and emergencies.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Interactive Stats Section -->
@@ -282,7 +386,16 @@
             <div class="stat-card">
                 <i class="bi bi-car-front-fill fa-3x text-primary mb-3"></i>
                 <h3 class="counter" data-target="@(featuredVehicles.Count > 0 ? featuredVehicles.Count : 0)">0</h3>
-                <p class="text-muted">Vehicles Available</p>
+                <p class="text-muted">
+                    @if (!string.IsNullOrEmpty(ViewBag.SelectedVehicleType))
+                    {
+                        <span>@ViewBag.SelectedVehicleType Vehicles</span>
+                    }
+                    else
+                    {
+                        <span>Vehicles Available</span>
+                    }
+                </p>
             </div>
         </div>
         <div class="col-md-3 col-sm-6 mb-4">
@@ -371,3 +484,101 @@
     </div>
 </div>
 </div>
+
+<script>
+// Vehicle type filtering functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the selected vehicle type from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedVehicleType = urlParams.get('vehicleType');
+    
+    if (selectedVehicleType) {
+        // Add smooth scroll to the featured vehicles section
+        const featuredSection = document.querySelector('#features').nextElementSibling;
+        if (featuredSection) {
+            setTimeout(() => {
+                featuredSection.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }, 500);
+        }
+        
+        // Add animation to the filter indicator
+        const filterIndicator = document.querySelector('.filter-indicator');
+        if (filterIndicator) {
+            filterIndicator.style.opacity = '0';
+            filterIndicator.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                filterIndicator.style.transition = 'all 0.5s ease';
+                filterIndicator.style.opacity = '1';
+                filterIndicator.style.transform = 'translateY(0)';
+            }, 300);
+        }
+        
+        // Add vehicle type specific animations
+        const vehicleCards = document.querySelectorAll('.vehicle-card');
+        vehicleCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 500 + (index * 100));
+        });
+    }
+    
+    // Add click event to vehicle type navigation items
+    const vehicleTypeLinks = document.querySelectorAll('.dropdown-item[href*="vehicleType"]');
+    vehicleTypeLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Add loading state
+            const originalText = this.innerHTML;
+            this.innerHTML = '<i class="bi bi-arrow-clockwise spin"></i> Loading...';
+            this.style.pointerEvents = 'none';
+            
+            // Navigate to the filtered page
+            setTimeout(() => {
+                window.location.href = this.href;
+            }, 300);
+        });
+    });
+    
+    // Add smooth transitions for vehicle cards
+    const allVehicleCards = document.querySelectorAll('.vehicle-card');
+    allVehicleCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+});
+
+// Add CSS for spinning animation
+const style = document.createElement('style');
+style.textContent = `
+    .spin {
+        animation: spin 1s linear infinite;
+    }
+    
+    @@keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    .vehicle-card {
+        transition: all 0.3s ease;
+    }
+    
+    .filter-indicator {
+        transition: all 0.3s ease;
+    }
+`;
+document.head.appendChild(style);
+</script>

@@ -22,13 +22,21 @@ public class HomeController : Controller
         _env = env;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? vehicleType = null)
     {
         try
         {
             if (_context != null)
             {
-                var vehicles = await _context.Vehicles
+                var query = _context.Vehicles.AsQueryable();
+                
+                // Filter by vehicle type if specified
+                if (!string.IsNullOrEmpty(vehicleType))
+                {
+                    query = query.Where(v => v.VehicleType.ToLower() == vehicleType.ToLower());
+                }
+                
+                var vehicles = await query
                     .OrderByDescending(v => v.CreatedAt)
                     .Take(6) // Show only 6 latest vehicles on home page
                     .ToListAsync();
@@ -54,16 +62,19 @@ public class HomeController : Controller
                 }).ToList();
 
                 ViewBag.FeaturedVehicles = vehicleViewModels;
+                ViewBag.SelectedVehicleType = vehicleType; // Pass the selected type to the view
             }
             else
             {
                 ViewBag.FeaturedVehicles = new List<VehicleViewModel>();
+                ViewBag.SelectedVehicleType = vehicleType;
             }
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error retrieving featured vehicles");
             ViewBag.FeaturedVehicles = new List<VehicleViewModel>();
+            ViewBag.SelectedVehicleType = vehicleType;
         }
         
         return View();
